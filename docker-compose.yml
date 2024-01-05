@@ -1,0 +1,25 @@
+version: "3.4"
+
+services:
+  app:
+    build: .
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres/cv_app_db
+      - |
+        SQLX_DATABASES={
+          postgres={url=postgres://postgres:postgres@postgres/cv_app_db}
+        }
+      - |
+        FILE_PATH=/app/CV_repository
+      # - SMTP_HOST=smtp.gmail.com
+      # - SMTP_USERNAME=
+      # - SMTP_PASSWORD=
+    ports:
+      - 8080:8080
+    volumes:
+      - ./app:/app
+
+        # ROCKET_DATABASES={
+        #   postgres={url=postgres://postgres:postgres@postgres/app_db},
+        #   redis={url=redis://redis:6379}
+        # }

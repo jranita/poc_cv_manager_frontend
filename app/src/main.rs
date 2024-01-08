@@ -4,6 +4,9 @@ use dioxus_router::prelude::*;
 
 use dioxus::prelude::*;
 use log::LevelFilter;
+pub(crate) mod views;
+pub(crate) mod router;
+use router::Route;
 
 fn main() {
     // Init debug
@@ -16,42 +19,43 @@ fn main() {
 
 fn app(cx: Scope) -> Element {
     render! {
+        link { rel: "stylesheet", href: "../dist/output.css" },
         Router::<Route> {}
     }
 }
 
-#[derive(Clone, Routable, Debug, PartialEq)]
-enum Route {
-    #[route("/")]
-    Home {},
-    #[route("/blog/:id")]
-    Blog { id: i32 },
-}
+// #[derive(Clone, Routable, Debug, PartialEq)]
+// enum Route {
+//     #[route("/")]
+//     Home {},
+//     #[route("/blog/:id")]
+//     Blog { id: i32 },
+// }
 
-#[inline_props]
-fn Blog(cx: Scope, id: i32) -> Element {
-    render! {
-        Link { to: Route::Home {}, "Go to counter" }
-        "Blog post {id}"
-    }
-}
+// #[inline_props]
+// fn Blog(cx: Scope, id: i32) -> Element {
+//     render! {
+//         Link { to: Route::Home {}, "Go to counter" }
+//         "Blog post {id}"
+//     }
+// }
 
-#[inline_props]
-fn Home(cx: Scope) -> Element {
-    let mut count = use_state(cx, || 0);
+// #[inline_props]
+// fn Home(cx: Scope) -> Element {
+//     let mut count = use_state(cx, || 0);
 
-    cx.render(rsx! {
-        Link {
-            to: Route::Blog {
-                id: *count.get()
-            },
-            "Go to blog"
-        }
-        div {
-            h1 { "High-Five counter: {count}" }
-            button { onclick: move |_| count += 1, "Up high!" }
-            button { onclick: move |_| count -= 1, "Down low!" }
+//     cx.render(rsx! {
+//         Link {
+//             to: Route::Blog {
+//                 id: *count.get()
+//             },
+//             "Go to blog"
+//         }
+//         div {
+//             h1 { "High-Five counter: {count}" }
+//             button { onclick: move |_| count += 1, "Up high!" }
+//             button { onclick: move |_| count -= 1, "Down low!" }
 
-        }
-    })
-}
+//         }
+//     })
+// }

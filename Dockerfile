@@ -17,6 +17,6 @@ RUN rustup component add clippy
 RUN cargo install cargo-watch
 RUN cargo install dioxus-cli
 
-CMD ["cargo", "watch", "--why", "--", "echo"]
-# CMD ["cargo", "run", "--release"]
+# CMD ["cargo", "watch", "--why", "--", "echo"]
+CMD ["cargo", "watch", "-x", "run --release"]
 # CMD ["npx", "tailwindcss", "-i", "./input.css", "-o", "./public/tailwind.css", "--watch"]

@@ -19,7 +19,7 @@ fn main() {
 
 fn app(cx: Scope) -> Element {
     render! {
-        link { rel: "stylesheet", href: "../dist/output.css" },
+        link { rel: "stylesheet", href: "/output.css" },
         Router::<Route> {}
     }
 }

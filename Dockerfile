@@ -14,9 +14,11 @@ RUN rustup update
 RUN rustup target add wasm32-unknown-unknown
 RUN rustup component add clippy
 
+#cargo clean is to prevent strange compilation memory errors
+RUN cargo clean
 RUN cargo install cargo-watch
+RUN cargo clean
 RUN cargo install dioxus-cli
 
-# CMD ["cargo", "watch", "--why", "--", "echo"]
-CMD ["cargo", "watch", "-x", "run --release"]
-# CMD ["npx", "tailwindcss", "-i", "./input.css", "-o", "./public/tailwind.css", "--watch"]
+CMD ["npx", "tailwindcss", "-i", "./input.css", "-o", "./public/tailwind.css", "--watch", "&"]
+CMD ["dx", "serve", "--hot-reload"]

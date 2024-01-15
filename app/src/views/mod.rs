@@ -1,3 +1,3 @@
-pub(crate) mod blog;
-pub(crate) mod home;
-pub(crate) mod not_found;
+pub mod blog;
+pub mod home;
+pub mod page404;

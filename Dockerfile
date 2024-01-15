@@ -20,5 +20,10 @@ RUN cargo install cargo-watch
 RUN cargo clean
 RUN cargo install dioxus-cli
 
-CMD ["npx", "tailwindcss", "-i", "./input.css", "-o", "./public/tailwind.css", "--watch", "&"]
-CMD ["dx", "serve", "--hot-reload"]
+RUN
+
+CMD ["cargo", "watch", "--why", "--", "echo"]
+
+#it is better not to run these commands, npx --watch sometimes does not catch changes, dx serve --hot-reload sometimes does not see changes
+# CMD ["npx", "tailwindcss", "-i", "./input.css", "-o", "./public/tailwind.css", "--watch", "&"]
+# CMD ["dx", "serve", "--hot-reload"]

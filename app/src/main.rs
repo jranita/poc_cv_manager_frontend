@@ -7,6 +7,8 @@ use log::LevelFilter;
 
 pub(crate) mod views;
 pub(crate) mod router;
+pub(crate) mod models;
+pub mod services;
 use router::Route;
 
 fn main() {

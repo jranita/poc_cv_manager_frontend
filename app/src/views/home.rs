@@ -12,10 +12,10 @@ pub fn Home(cx: Scope) -> Element {
             body {
                 Link {
                     class: "text-red-400 bg-gray-300 flex items-center justify-center",
-                    to: Route::Blog {
-                        id: *count.get()
+                    to: Route::Keywords {  } {
+                        // id: *count.get()
                     },
-                    "Go to blog!!"
+                    "Go to keywords!!"
                 },
                 div {
                     h1 { "High-Five counter: {count}" }

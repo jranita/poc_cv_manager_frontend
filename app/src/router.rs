@@ -1,5 +1,5 @@
 // use crate::views::{header::AuthHeader, home::Home, login::Login, not_found::NotFound};
-use crate::views::{home::Home, blog::Blog, page404::PageNotFound};
+use crate::views::{home::Home, keywords::Keywords, page404::PageNotFound};
 use dioxus::prelude::*;
 use dioxus_router::prelude::*;
 
@@ -21,8 +21,10 @@ use dioxus_router::prelude::*;
 pub(crate) enum Route {
     #[route("/")]
     Home {},
-    #[route("/blog/:id")]
-    Blog { id: i32 },
+    #[route("/keywords/")]
+    Keywords { },
+    // #[route("/keyword/:id")]
+    // Keyword { id: i32 },
     #[route("/:..segments")]
     PageNotFound { segments: Vec<String>, },
 }

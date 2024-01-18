@@ -1,21 +1,34 @@
-use dioxus::prelude::*;
+use dioxus::{html, prelude::*};
 use dioxus_router::components::Link;
 
-use crate::{router::Route, services::keywords::get_keywords};
-
-#[component]
-pub fn Keyword(cx: Scope, id: i32) -> Element {
-    render! {
-        Link { to: Route::Home {}, "Home" },
-        "Keyword {id}"
-    }
-}
+use crate::{models::keyword::Keyword, router::Route, services::keywords::get_keywords};
 
 #[component]
 pub fn Keywords(cx: Scope) -> Element {
-    let aaa = use_future!(cx, || async move {get_keywords(999, 0, "id".to_owned(), "DESC".to_owned(), "mech".to_owned()).await.unwrap()});
+    let keyword_vec = use_future!(cx, || async move {
+        get_keywords(
+            999,
+            0,
+            "keyword_name".to_owned(),
+            "ASC".to_owned(),
+            "keyword_name,ac".to_owned(),
+        )
+        .await
+        .unwrap()
+    })
+    .value()?;
     render! {
         Link { to: Route::Home {}, "Home" },
-        format!("Keywords List +{:?}+", "aaa")
+        div {
+            keyword_vec.iter().map(|item| {
+                    let Keyword {id, keyword_name, date_created} = item;
+                    rsx!(
+                        li {"{keyword_name}"}
+                    )
+                }
+            )
+        }
+
+        // format!("Keywords List +{:?}+", keyword_vec)
     }
 }

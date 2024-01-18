@@ -9,12 +9,10 @@ pub async fn get_keywords(
     order_by: String,
     order_direction: String,
     filter: String,
-) -> Result<&'static str, Error> {
-    // ) -> Result<Vec<Keyword>, reqwest::Error> {
+    ) -> Result<Vec<Keyword>, Error> {
 
-    // let url: String = format!("{}keywords?offset={}&limit={}&order_by={}&order_direction={}&filter={}", super::BASE_API_URL, offset, limit, order_by, order_direction, filter);
-    // let url: String = format!("{}keywords?offset={}&limit={}", super::BASE_API_URL, offset, limit);
-    let url: String = format!("{}keywords", super::BASE_API_URL);
+    let url: String = format!("{}keywords?offset={}&limit={}&order_by={}&order_direction={}&filter={}", super::BASE_API_URL, offset, limit, order_by, order_direction, filter);
+
     let mut headers = HeaderMap::new();
     headers.insert(
         ACCESS_CONTROL_ALLOW_ORIGIN,
@@ -30,18 +28,9 @@ pub async fn get_keywords(
         .headers(headers)
         .basic_auth("admin@admin.org", Some("password"))
         .send()
-        .await?;
+        .await?
+        .json::<Vec<Keyword>>()
+        .await;
 
-    // let keywords_list = rows
-    //     .iter()
-    //     .map(|r| Keyword {
-    //         id: r.get("id"),
-    //         keyword_name: r.get("keyword_name"),
-    //         // date_created: r.get<chrono::Utc>("date_created").date_naive(),
-    //         date_created: r.get("date_created"),
-    //     })
-    //     .collect::<Vec<Keyword>>();
-    // println!("{:?}", keywords_list[0]);
-
-    Ok("eee")
+    rows
 }

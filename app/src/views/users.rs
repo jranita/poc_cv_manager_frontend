@@ -1,15 +1,15 @@
 use dioxus::{html, prelude::*};
 use dioxus_router::components::Link;
 
-use crate::{models::keyword::Keyword, router::Route, services::keywords::get_keywords};
+use crate::{models::user::User, router::Route, services::users::get_users};
 
 #[component]
-pub fn Keywords(cx: Scope) -> Element {
-    let keyword_vec = use_future!(cx, || async move {
-        get_keywords(
+pub fn Users(cx: Scope) -> Element {
+    let user_vec = use_future!(cx, || async move {
+        get_users(
             999,
             0,
-            "keyword_name".to_owned(),
+            "lastname".to_owned(),
             "ASC".to_owned(),
             "".to_owned(),
         )
@@ -20,10 +20,10 @@ pub fn Keywords(cx: Scope) -> Element {
     render! {
         Link { to: Route::Home {}, "Home" },
         div {
-            keyword_vec.iter().map(|item| {
-                    let Keyword {id, keyword_name, date_created} = item;
+            user_vec.iter().map(|item| {
+                    let User { id, firstname, lastname, email, pass, role, cv_id_list, date_created } = item;
                     rsx!(
-                        li {"{keyword_name}"}
+                        li {"{firstname} {lastname}"}
                     )
                 }
             )

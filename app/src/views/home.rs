@@ -10,19 +10,12 @@ pub fn Home(cx: Scope) -> Element {
     cx.render(
         rsx! (
             body {
-                Link {
-                    class: "text-red-400 bg-gray-300 flex items-center justify-center",
-                    to: Route::Keywords {  } {
-                        // id: *count.get()
-                    },
-                    "Go to keywords!!"
-                },
-                div {
-                    h1 { "High-Five counter: {count}" }
-                    button { onclick: move |_| count += 1, "Up high!" }
-                    button { onclick: move |_| count -= 1, "Down low!" }
-
-                }
+              class: "bg-gray-100",
+              div {
+                h1 { "High-Five counter: {count}" }
+                button { onclick: move |_| count += 1, "Up high!" }
+                button { onclick: move |_| count -= 1, "Down low!" }
+              }
             }
         )
     )

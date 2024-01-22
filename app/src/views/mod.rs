@@ -6,6 +6,7 @@ use dioxus::{
 };
 use dioxus_router::components::Link;
 
+pub mod navbar;
 pub mod home;
 pub mod keywords;
 pub mod client_companies;

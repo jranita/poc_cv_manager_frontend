@@ -1,10 +1,11 @@
 use dioxus::{html, prelude::*};
 use dioxus_router::components::Link;
 
-use crate::{models::keyword::Keyword, router::Route, services::keywords::get_keywords};
+use crate::{models::keyword::Keyword, router::Route, services::keywords::get_keywords, views::shared::Card};
 
 #[component]
 pub fn Keywords(cx: Scope) -> Element {
+    let title: String = "Keywords".to_string();
     let keyword_vec = use_future!(cx, || async move {
         get_keywords(
             999,
@@ -18,15 +19,29 @@ pub fn Keywords(cx: Scope) -> Element {
     })
     .value()?;
     render! {
-        Link { to: Route::Home {}, "Home" },
         div {
-            keyword_vec.iter().map(|item| {
-                    let Keyword {id, keyword_name, date_created} = item;
-                    rsx!(
-                        li {"{keyword_name}"}
-                    )
-                }
-            )
+            Link { to: Route::Home {}, "Home" }
+            Card {
+                card_title: "Keywords".to_string(),
+                    div {
+                        keyword_vec.iter().map(|item| {
+                                let Keyword {id, keyword_name, date_created} = item;
+                                rsx!(
+                                    li {"{keyword_name}"}
+                                )
+                            }
+                        )
+                    }
+            },
+            // div {
+            //     keyword_vec.iter().map(|item| {
+            //             let Keyword {id, keyword_name, date_created} = item;
+            //             rsx!(
+            //                 li {"{keyword_name}"}
+            //             )
+            //         }
+            //     )
+            // }
         }
 
         // format!("Keywords List +{:?}+", keyword_vec)

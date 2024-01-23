@@ -14,6 +14,7 @@ pub mod job_functions;
 pub mod cvs;
 pub mod users;
 pub mod page404;
+pub mod shared;
 
 #[component]
 pub fn HomeLink(cx: Scope) -> Element {

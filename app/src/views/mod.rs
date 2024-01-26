@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use crate::{router::Route, Props};
 use dioxus::prelude::*;
 use dioxus::{

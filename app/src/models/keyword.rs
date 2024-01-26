@@ -1,8 +1,9 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+
 // use futures::future::join_all;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Keyword {
     pub id: i32,
     pub keyword_name: String,

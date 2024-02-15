@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 use chrono::DateTime;
 use dioxus::prelude::*;
-
+ use crate::dioxus_elements::span;
 use super::SimpleItemProperties;
 
 #[component]
@@ -59,6 +59,7 @@ pub fn Card<'a>(
                             path { d: "M8 7l9 0l0 9" }
                         }
                     }
+                    span {}
                 }
                 div {
                     aria_label: "content",

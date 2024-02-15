@@ -1,7 +1,4 @@
 use dioxus::prelude::*;
-pub(crate) use dioxus_router::components::Link;
-
-use crate::router::Route;
 
 #[component]
 pub fn Home(cx: Scope) -> Element {

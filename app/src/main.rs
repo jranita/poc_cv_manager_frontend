@@ -5,9 +5,9 @@ use dioxus_router::prelude::*;
 use dioxus::prelude::*;
 use log::LevelFilter;
 
-pub(crate) mod views;
-pub(crate) mod router;
-pub(crate) mod models;
+pub mod views;
+pub mod router;
+pub mod models;
 pub mod services;
 use router::Route;
 

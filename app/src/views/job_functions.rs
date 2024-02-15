@@ -1,4 +1,4 @@
-use dioxus::{html, prelude::*};
+use dioxus::prelude::*;
 use dioxus_router::components::Link;
 
 use crate::{

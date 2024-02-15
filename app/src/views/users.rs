@@ -1,4 +1,4 @@
-use dioxus::{html, prelude::*};
+use dioxus::prelude::*;
 use dioxus_router::components::Link;
 
 use crate::{models::user::User, router::Route, services::users::get_users};

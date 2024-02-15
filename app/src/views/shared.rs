@@ -1,16 +1,18 @@
 #![allow(non_snake_case)]
 use chrono::DateTime;
 use dioxus::prelude::*;
-use dioxus_router::components::Outlet;
 
-use crate::{models::keyword::Keyword, router::Route};
+use super::SimpleItemProperties;
 
 #[component]
-pub fn Card(
+pub fn Card<'a>(
     cx: Scope,
     card_title: String,
+    r#type: String,
     card_subtitle: String,
-    item_vec: Vec<Keyword>,
+    model: String,
+    headers_vec: Vec<&'static str>,
+    item_vec: Vec<SimpleItemProperties<'a>>,
 ) -> Element {
     cx.render({ rsx!{
         div { class: "flex items-center justify-center bg-gray-200",
@@ -62,100 +64,28 @@ pub fn Card(
                     aria_label: "content",
                     style: "height: 40svh",
                     class: "mt-9 grid gap-2.5 overflow-scroll",
-                    item_vec.iter().map(|item| {
-                        let Keyword {id, keyword_name, date_created: _} = item;
+
+                    for item in item_vec {
                         rsx!(
                             div {
-                                key: "{id}",
-                                id: "{id}",
-                                "{keyword_name}"
+                                key: "{item.id}",
+                                id: "{item.id}",
+                                for (i, header) in headers_vec.iter().enumerate() {
+                                    match i {
+                                        // 0 => format!("{}: {}", (*header).to_string(), item.props.0),
+                                        0 => format!("{}", item.props.0),
+                                        1 => format!("{}", item.props.1),
+                                        2 => format!("{}", item.props.2),
+                                        3 => format!("{}", item.props.3),
+                                        4 => format!("{}", item.props.4),
+                                        _ => "".to_string()
+                                    }
+                                }
                             }
                         )
-                    })
+                    }
                 }
             }
         }
     }})
 }
-
-// #[component]
-// pub fn List(cx: Scope) -> Element {
-//     render! { rsx!{
-//     } }
-// }
-
-// #[derive(Props, PartialEq)]
-// pub struct ListEntryProps {
-//     id: u32, keyword_name: String
-// }
-
-// #[component]
-// pub(crate) fn ListEntry(cx: Scope, ) -> Element {
-//     cx.render({ rsx!{
-
-//             a { href: "#",
-//                 div { class: "flex items-center space-x-4 p-3.5 rounded-full bg-gray-100",
-//                     span { class: "flex items-center justify-center w-10 h-10 shrink-0 rounded-full bg-white text-gray-900",
-//                         svg {
-//                             width: "24",
-//                             stroke_linecap: "round",
-//                             stroke: "currentColor",
-//                             height: "24",
-//                             stroke_width: "1.5",
-//                             stroke_linejoin: "round",
-//                             view_box: "0 0 24 24",
-//                             xmlns: "http://www.w3.org/2000/svg",
-//                             fill: "none",
-//                             class: "w-6 h-6",
-//                             path { fill: "none", stroke: "none", d: "M0 0h24v24H0z" }
-//                             path { d: "M8 16a3 3 0 0 1 -3 3" }
-//                             path { d: "M16 16a3 3 0 0 0 3 3" }
-//                             path { d: "M12 16v4" }
-//                             path { d: "M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" }
-//                             path { d: "M7 13v-3a1 1 0 0 1 1 -1h8a1 1 0 0 1 1 1v3" }
-//                         }
-//                     }
-//                     div { class: "flex flex-col flex-1",
-//                         h3 { class: "text-sm font-medium", "{cx.props.item.keyword_name}" }
-//                         div { class: "divide-x divide-gray-200 mt-auto",
-//                             span { class: "inline-block px-3 text-xs leading-none text-gray-400 font-normal first:pl-0",
-//                             "{cx.props.item.id}"
-//                             }
-//                             span { class: "inline-block px-3 text-xs leading-none text-gray-400 font-normal first:pl-0",
-//                             "{cx.props.item.date_created}"
-//                             }
-//                         }
-//                     }
-//                     svg {
-//                         stroke_linecap: "round",
-//                         xmlns: "http://www.w3.org/2000/svg",
-//                         stroke_linejoin: "round",
-//                         fill: "none",
-//                         stroke: "currentColor",
-//                         width: "24",
-//                         stroke_width: "2",
-//                         height: "24",
-//                         view_box: "0 0 24 24",
-//                         class: "w-5 h-5 shrink-0",
-//                         path { stroke: "none", d: "M0 0h24v24H0z", fill: "none" }
-//                         path { d: "M9 6l6 6l-6 6" }
-//                     }
-//                 }
-//             }
-//             // div {
-//             //     keyword_vec.iter().map(|item| {
-//             //             let Keyword {id, keyword_name, date_created} = item;
-//             //             rsx!(
-//             //                 li {"{keyword_name}"}
-//             //             )
-//             //         }
-//             //     )
-//             // }
-//     }})
-// }
-
-// #[component]
-// pub fn List(cx: Scope) -> Element {
-//     render! { rsx!{
-//     } }
-// }

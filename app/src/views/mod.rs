@@ -27,7 +27,7 @@ pub fn HomeLink(cx: Scope) -> Element {
 
 pub type Props<'a> = (&'a str, &'a str, &'a str, &'a str, &'a str);
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct SimpleItemProperties<'a> {
     id: i32,
     date_created: String,

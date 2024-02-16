@@ -64,7 +64,7 @@ pub fn Card<'a>(
                 div {
                     aria_label: "content",
                     style: "height: 40svh",
-                    class: "mt-9 grid gap-2.5 overflow-scroll",
+                    class: "mt-9 grid gap-2.5 overflow-scroll {model}",
 
                     for item in item_vec {
                         rsx!(
@@ -74,11 +74,11 @@ pub fn Card<'a>(
                                 for (i, header) in headers_vec.iter().enumerate() {
                                     match i {
                                         // 0 => format!("{}: {}", (*header).to_string(), item.props.0),
-                                        0 => format!("{}", item.props.0),
-                                        1 => format!("{}", item.props.1),
-                                        2 => format!("{}", item.props.2),
-                                        3 => format!("{}", item.props.3),
-                                        4 => format!("{}", item.props.4),
+                                        0 => format!("{} ", item.props.0),
+                                        1 => format!(" {}", item.props.1),
+                                        2 => format!(" {}", item.props.2),
+                                        3 => format!(" {}", item.props.3),
+                                        4 => format!(" {}", item.props.4),
                                         _ => "".to_string()
                                     }
                                 }

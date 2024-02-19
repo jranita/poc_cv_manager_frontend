@@ -54,8 +54,8 @@ pub fn Users(cx: Scope) -> Element {
             Card {
                 card_title: title.clone(),
                 card_subtitle: subtitle.clone(),
-                r#type: "simple_list".to_string(),
-                model: "Users".to_string(),
+                r#type: &"simple_list",
+                model: &"Users",
                 headers_vec: user_simple_headers_vec,
                 item_vec: item_vec,
             },

@@ -8,9 +8,9 @@ use super::SimpleItemProperties;
 pub fn Card<'a>(
     cx: Scope,
     card_title: String,
-    r#type: String,
+    r#type: &'a str,
     card_subtitle: String,
-    model: String,
+    model: &'a str,
     headers_vec: Vec<&'static str>,
     item_vec: Vec<SimpleItemProperties<'a>>,
 ) -> Element {

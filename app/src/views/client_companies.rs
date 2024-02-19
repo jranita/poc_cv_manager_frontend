@@ -49,8 +49,8 @@ pub fn ClientCompanies(cx: Scope) -> Element {
             Card {
                 card_title: title.clone(),
                 card_subtitle: subtitle.clone(),
-                r#type: "simple_list".to_string(),
-                model: "ClientCompany".to_string(),
+                r#type: &"simple_list",
+                model: &"ClientCompany",
                 headers_vec: client_company_simple_headers_vec,
                 item_vec: item_vec,
             },

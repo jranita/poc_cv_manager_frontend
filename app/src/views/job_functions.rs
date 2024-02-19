@@ -50,8 +50,8 @@ pub fn JobFunctions(cx: Scope) -> Element {
             Card {
                 card_title: title.clone(),
                 card_subtitle: subtitle.clone(),
-                r#type: "simple_list".to_string(),
-                model: "JobFunction".to_string(),
+                r#type: &"simple_list",
+                model: &"JobFunction",
                 headers_vec: job_function_simple_headers_vec,
                 item_vec: item_vec,
             },

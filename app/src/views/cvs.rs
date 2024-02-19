@@ -49,8 +49,8 @@ pub fn Cvs(cx: Scope) -> Element {
             Card {
                 card_title: title.clone(),
                 card_subtitle: subtitle.clone(),
-                r#type: "simple_list".to_string(),
-                model: "CV".to_string(),
+                r#type: &"simple_list",
+                model: &"CV",
                 headers_vec: cv_simple_headers_vec,
                 item_vec: item_vec,
             },

@@ -44,20 +44,25 @@ pub fn Cvs(cx: Scope) -> Element {
 
     render! {
         div {
-            Link { to: Route::Home {}, "Home" },
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                Card {
+                    card_title: title.clone(),
+                    card_subtitle: subtitle.clone(),
+                    r#type: &"simple_list",
+                    model: &"CV",
+                    headers_vec: cv_simple_headers_vec.clone(),
+                    item_vec: item_vec.clone(),
+                },
 
-            Card {
-                card_title: title.clone(),
-                card_subtitle: subtitle.clone(),
-                r#type: &"simple_list",
-                model: &"CV",
-                headers_vec: cv_simple_headers_vec,
-                item_vec: item_vec,
+                Card {
+                    card_title: title.clone(),
+                    card_subtitle: subtitle.clone(),
+                    r#type: &"detailed_view",
+                    model: &"CV",
+                    headers_vec: cv_simple_headers_vec,
+                    item_vec: item_vec,
+                },
             },
         },
-
-        div {
-            Link { to: Route::Home {}, "Home2" },
-        }
     }
 }

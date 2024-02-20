@@ -10,18 +10,6 @@ use crate::{
 // Set here what you want to show, id and date_created are already passed to the component
 const KEYWORD_SIMPLE_HEADERS: [&str; 1] = ["keyword_name"];
 
-
-// fn get_model_values<'a> (item: &'a Keyword, headers: Vec<&'a str>) -> Props<'a> {
-//     let mut result: Props = (& "", & "", & "", & "", & "");
-//     for (i, header) in headers.iter().enumerate() {
-//         match (i, *header) {
-//             (0, "keyword_name") => result.0 = &item.keyword_name,
-//             _ => (),
-//         }
-//     }
-//     result.clone()
-// }
-
 #[component]
 pub fn Keywords(cx: Scope) -> Element {
     let title: String = "Keywords".to_string();
@@ -58,20 +46,25 @@ pub fn Keywords(cx: Scope) -> Element {
 
     render! {
         div {
-            Link { to: Route::Home {}, "Home" },
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                Card {
+                    card_title: title.clone(),
+                    card_subtitle: subtitle.clone(),
+                    r#type: &"simple_list",
+                    model: &"Keywords",
+                    headers_vec: keyword_simple_headers_vec.clone(),
+                    item_vec: item_vec.clone(),
+                },
 
-            Card {
-                card_title: title.clone(),
-                card_subtitle: subtitle.clone(),
-                r#type: &"simple_list",
-                model: &"Keywords",
-                headers_vec: keyword_simple_headers_vec,
-                item_vec: item_vec,
+                Card {
+                    card_title: title.clone(),
+                    card_subtitle: subtitle.clone(),
+                    r#type: &"detailed_view",
+                    model: &"Keywords",
+                    headers_vec: keyword_simple_headers_vec,
+                    item_vec: item_vec,
+                },
             },
         },
-
-        div {
-            Link { to: Route::Home {}, "Home2" },
-        }
     }
 }

@@ -49,20 +49,25 @@ pub fn Users(cx: Scope) -> Element {
 
     render! {
         div {
-            Link { to: Route::Home {}, "Home" },
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                Card {
+                    card_title: title.clone(),
+                    card_subtitle: subtitle.clone(),
+                    r#type: &"simple_list",
+                    model: &"Users",
+                    headers_vec: user_simple_headers_vec.clone(),
+                    item_vec: item_vec.clone(),
+                },
 
-            Card {
-                card_title: title.clone(),
-                card_subtitle: subtitle.clone(),
-                r#type: &"simple_list",
-                model: &"Users",
-                headers_vec: user_simple_headers_vec,
-                item_vec: item_vec,
+                Card {
+                    card_title: title.clone(),
+                    card_subtitle: subtitle.clone(),
+                    r#type: &"detailed_view",
+                    model: &"Users",
+                    headers_vec: user_simple_headers_vec,
+                    item_vec: item_vec,
+                },
             },
         },
-
-        div {
-            Link { to: Route::Home {}, "Home2" },
-        }
     }
 }

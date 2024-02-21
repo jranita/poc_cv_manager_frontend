@@ -32,14 +32,39 @@ pub async fn get_client_companies(
 
     let client = reqwest::Client::builder().build()?;
 
-    let rows = client
+    client
         .get(url)
         .headers(headers)
         .basic_auth("admin@admin.org", Some("password"))
         .send()
         .await?
         .json::<Vec<ClientCompany>>()
-        .await;
-
-    rows
+        .await
 }
+
+pub async fn get_client_company(
+    id: usize,
+    ) -> Result<ClientCompany, Error> {
+
+    let url: String = format!("{}clients/0?id={}", super::BASE_API_URL, id);
+
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        ACCESS_CONTROL_ALLOW_ORIGIN,
+        "http://localhost:8080".parse().unwrap(),
+    );
+    headers.insert(ORIGIN, "http://localhost:8080".parse().unwrap());
+    headers.insert(ACCEPT, "application/json".parse().unwrap());
+
+    let client = reqwest::Client::builder().build()?;
+
+    client
+        .get(url)
+        .headers(headers)
+        .basic_auth("admin@admin.org", Some("password"))
+        .send()
+        .await?
+        .json::<ClientCompany>()
+        .await
+}
+

@@ -23,14 +23,41 @@ pub async fn get_keywords(
 
     let client = reqwest::Client::builder().build()?;
 
-    let rows = client
+    client
         .get(url)
         .headers(headers)
         .basic_auth("admin@admin.org", Some("password"))
         .send()
         .await?
         .json::<Vec<Keyword>>()
-        .await;
+        .await
 
-    rows
 }
+
+pub async fn get_keyword(
+    id: usize,
+    ) -> Result<Keyword, Error> {
+
+    let url: String = format!("{}keywords/0?id={}", super::BASE_API_URL, id);
+
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        ACCESS_CONTROL_ALLOW_ORIGIN,
+        "http://localhost:8080".parse().unwrap(),
+    );
+    headers.insert(ORIGIN, "http://localhost:8080".parse().unwrap());
+    headers.insert(ACCEPT, "application/json".parse().unwrap());
+
+    let client = reqwest::Client::builder().build()?;
+
+    client
+        .get(url)
+        .headers(headers)
+        .basic_auth("admin@admin.org", Some("password"))
+        .send()
+        .await?
+        .json::<Keyword>()
+        .await
+
+}
+

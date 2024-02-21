@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{models::keyword, router::Route};
+use crate::router::Route;
 use dioxus::prelude::*;
 use dioxus::{
     core::{Element, Scope},
@@ -25,13 +25,21 @@ pub fn HomeLink(cx: Scope) -> Element {
     }
 }
 
-pub type Props<'a> = (&'a str, &'a str, &'a str, &'a str, &'a str);
+pub type SimpleProps<'a> = (&'a str, &'a str, &'a str, &'a str, &'a str);
+pub type DetailedProps<'a> = (&'a str, &'a str, &'a str, &'a str, &'a str, &'a str, &'a str, &'a str);
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct SimpleItemProperties<'a> {
     id: i32,
     date_created: String,
-    props: Props<'a>,
+    props: SimpleProps<'a>,
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct DetailedItemProperties<'a> {
+    id: i32,
+    date_created: String,
+    props: DetailedProps<'a>,
 }
 
 

@@ -1,10 +1,12 @@
 use dioxus::prelude::*;
-use dioxus_router::components::Link;
-
-use crate::{models::user::User, router::Route, services::users::get_users, views::{shared::Card, Props, SimpleItemProperties}};
+use crate::{
+    services::users::{get_users, get_user},
+    views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
+};
 
 // Set here what you want to show, id and date_created are already passed to the component
 const USER_SIMPLE_HEADERS: [&str; 2] = ["firstname", "lastname"];
+const USER_DETAILED_HEADERS: [&str; 3] = ["firstname", "lastname", "email"];
 
 #[component]
 pub fn Users(cx: Scope) -> Element {
@@ -23,15 +25,23 @@ pub fn Users(cx: Scope) -> Element {
     })
     .value()?;
 
+    let user = use_future!(cx, || async move {
+        get_user(1)
+        .await
+        .unwrap()
+    })
+    .value()?;
+
     // to sort the firstname I have to clone because original vec is not mutable
-    let mut users_vec = user_vec.clone();
+    let users_vec = user_vec.clone();
     // users_vec.sort_by_key(|x| x.firstname.clone());
 
     let user_simple_headers_vec: Vec<&'static str> = Vec::from(USER_SIMPLE_HEADERS);
+    let user_detailed_headers_vec: Vec<&'static str> = Vec::from(USER_DETAILED_HEADERS);
 
     // Set here what you want to show, should match CLIENT_COMPANY_SIMPLE_HEADERS
     // TODO automate this
-    let mut props_vec: Vec<Props> = vec![];
+    let mut props_vec: Vec<SimpleProps> = vec![];
     for item in user_vec {
         props_vec.push(
             (&item.firstname, &item.lastname, "", "", "")
@@ -44,7 +54,15 @@ pub fn Users(cx: Scope) -> Element {
         props: props_vec[item.0],
     }).collect();
 
-    let mut item_vec: Vec<SimpleItemProperties> = item_unsorted_vec.clone();
+    let detailed_props: DetailedProps = (&user.firstname, &user.lastname, &user.email, "", "", "", "", "");
+
+    let detailed_item: DetailedItemProperties = DetailedItemProperties{
+        id: user.id,
+        date_created: user.date_created.to_string(),
+        props: detailed_props,
+    };
+
+    let mut item_vec: Vec<SimpleItemProperties> = item_unsorted_vec;
     item_vec.sort_by_key(|x| x.props.0);
 
     render! {
@@ -56,7 +74,9 @@ pub fn Users(cx: Scope) -> Element {
                     r#type: &"simple_list",
                     model: &"Users",
                     headers_vec: user_simple_headers_vec.clone(),
+                    detailed_headers_vec: user_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
 
                 Card {
@@ -65,7 +85,9 @@ pub fn Users(cx: Scope) -> Element {
                     r#type: &"detailed_view",
                     model: &"Users",
                     headers_vec: user_simple_headers_vec,
+                    detailed_headers_vec: user_detailed_headers_vec,
                     item_vec: item_vec,
+                    detailed_item: detailed_item,
                 },
             },
         },

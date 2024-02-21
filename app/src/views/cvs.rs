@@ -1,12 +1,13 @@
 #![allow(non_snake_case)]
-use chrono::DateTime;
 use dioxus::prelude::*;
-use dioxus_router::components::Link;
-
-use crate::{models::cv::CV, router::Route, services::cvs::get_cvs, views::{shared::Card, Props, SimpleItemProperties}};
+use crate::{
+    services::cvs::{get_cvs, get_cv},
+    views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
+};
 
 // Set here what you want to show, id and date_created are already passed to the component
 const CV_SIMPLE_HEADERS: [&str; 1] = ["cv_name"];
+const CV_DETAILED_HEADERS: [&str; 2] = ["cv_name", "date_created"];
 
 #[component]
 pub fn Cvs(cx: Scope) -> Element {
@@ -25,11 +26,19 @@ pub fn Cvs(cx: Scope) -> Element {
     })
     .value()?;
 
+    let cv = use_future!(cx, || async move {
+        get_cv(1)
+        .await
+        .unwrap()
+    })
+    .value()?;
+
     let cv_simple_headers_vec: Vec<&'static str> = Vec::from(CV_SIMPLE_HEADERS);
+    let cv_detailed_headers_vec: Vec<&'static str> = Vec::from(CV_DETAILED_HEADERS);
 
     // Set here what you want to show, should match CLIENT_COMPANY_SIMPLE_HEADERS
     // TODO automate this
-    let mut props_vec: Vec<Props> = vec![];
+    let mut props_vec: Vec<SimpleProps> = vec![];
     for item in cv_vec {
         props_vec.push(
             (&item.cv_name, "", "", "", "")
@@ -42,6 +51,14 @@ pub fn Cvs(cx: Scope) -> Element {
         props: props_vec[item.0],
     }).collect();
 
+    let detailed_props: DetailedProps = (&cv.cv_name, "", "", "", "", "", "", "");
+
+    let detailed_item: DetailedItemProperties = DetailedItemProperties{
+        id: cv.id,
+        date_created: cv.date_created.to_string(),
+        props: detailed_props,
+    };
+
     render! {
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -51,7 +68,9 @@ pub fn Cvs(cx: Scope) -> Element {
                     r#type: &"simple_list",
                     model: &"CV",
                     headers_vec: cv_simple_headers_vec.clone(),
+                    detailed_headers_vec: cv_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
 
                 Card {
@@ -60,7 +79,9 @@ pub fn Cvs(cx: Scope) -> Element {
                     r#type: &"detailed_view",
                     model: &"CV",
                     headers_vec: cv_simple_headers_vec,
+                    detailed_headers_vec: cv_detailed_headers_vec,
                     item_vec: item_vec,
+                    detailed_item: detailed_item,
                 },
             },
         },

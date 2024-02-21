@@ -1,14 +1,11 @@
 #![allow(non_snake_case)]
-use chrono::DateTime;
 use dioxus::prelude::*;
-use dioxus_router::components::Link;
-use crate::{models::keyword, views::{shared::Card, Props, SimpleItemProperties}};
-use crate::{
-    models::keyword::Keyword, router::Route, services::keywords::get_keywords,
-};
+use crate::views::{shared::Card, DetailedItemProperties, SimpleItemProperties, SimpleProps, DetailedProps};
+use crate::services::keywords::{get_keywords, get_keyword};
 
 // Set here what you want to show, id and date_created are already passed to the component
 const KEYWORD_SIMPLE_HEADERS: [&str; 1] = ["keyword_name"];
+const KEYWORD_DETAILED_HEADERS: [&str; 1] = ["keyword_name"];
 
 #[component]
 pub fn Keywords(cx: Scope) -> Element {
@@ -27,11 +24,19 @@ pub fn Keywords(cx: Scope) -> Element {
     })
     .value()?;
 
+    let keyword = use_future!(cx, || async move {
+        get_keyword(1)
+        .await
+        .unwrap()
+    })
+    .value()?;
+
     let keyword_simple_headers_vec: Vec<&'static str> = Vec::from(KEYWORD_SIMPLE_HEADERS);
+    let keyword_detailed_headers_vec: Vec<&'static str> = Vec::from(KEYWORD_DETAILED_HEADERS);
 
     // Set here what you want to show, should match KEYWORD_SIMPLE_HEADERS
     // TODO automate this
-    let mut props_vec: Vec<Props> = vec![];
+    let mut props_vec: Vec<SimpleProps> = vec![];
     for item in keyword_vec {
         props_vec.push(
             (&item.keyword_name, "", "", "", "")
@@ -44,6 +49,15 @@ pub fn Keywords(cx: Scope) -> Element {
         props: props_vec[item.0],
     }).collect();
 
+    let detailed_props: DetailedProps = (&keyword.keyword_name, "", "", "", "", "", "", "");
+
+    let detailed_item: DetailedItemProperties = DetailedItemProperties{
+        id: keyword.id,
+        date_created: keyword.date_created.to_string(),
+        props: detailed_props,
+    };
+    // end TODO
+
     render! {
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -53,17 +67,21 @@ pub fn Keywords(cx: Scope) -> Element {
                     r#type: &"simple_list",
                     model: &"Keywords",
                     headers_vec: keyword_simple_headers_vec.clone(),
+                    detailed_headers_vec: keyword_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
 
-                Card {
-                    card_title: title.clone(),
-                    card_subtitle: subtitle.clone(),
-                    r#type: &"detailed_view",
-                    model: &"Keywords",
-                    headers_vec: keyword_simple_headers_vec,
-                    item_vec: item_vec,
-                },
+                // Card {
+                //     card_title: title,
+                //     card_subtitle: subtitle,
+                //     r#type: &"detailed_view",
+                //     model: &"Keywords",
+                //     headers_vec: keyword_simple_headers_vec,
+                //     detailed_headers_vec: keyword_detailed_headers_vec,
+                //     item_vec: item_vec,
+                //     detailed_item: detailed_item,
+                // },
             },
         },
     }

@@ -1,8 +1,25 @@
 #![allow(non_snake_case)]
-use chrono::DateTime;
 use dioxus::prelude::*;
- use crate::dioxus_elements::span;
-use super::SimpleItemProperties;
+use super::{DetailedItemProperties, SimpleItemProperties};
+
+struct ComplexData(i32);
+
+#[derive(Props)]
+pub struct CustomFancyButtonProps<'a> {
+    on_click: EventHandler<'a, ComplexData>,
+}
+
+pub fn CustomFancyButton<'a>(cx: Scope<'a, CustomFancyButtonProps<'a>>) -> Element<'a> {
+    cx.render(
+        rsx!(button {
+            class: "fancy-button",
+            onclick: move |_| cx.props.on_click.call(ComplexData(0)),
+            "click me pls."
+        })
+    )
+}
+
+
 
 #[component]
 pub fn Card<'a>(
@@ -12,10 +29,15 @@ pub fn Card<'a>(
     card_subtitle: String,
     model: &'a str,
     headers_vec: Vec<&'static str>,
+    detailed_headers_vec: Vec<&'static str>,
     item_vec: Vec<SimpleItemProperties<'a>>,
+    detailed_item: DetailedItemProperties<'a>,
 ) -> Element {
     cx.render({ rsx!{
-
+            button {
+                onclick: move |event| log::info!("Clicked! Event: {event:?}"),
+                "click me!"
+            }
             div { aria_label: "card", class: "p-8 m-10 rounded-3xl bg-white max-w-sm w-full",
                 if r#type == &"simple_list"  {
                     cx.render(
@@ -125,8 +147,8 @@ pub fn Card<'a>(
 
                         DetailedView {
                             model: model,
-                            headers_vec: headers_vec.to_vec(),
-                            item_vec: item_vec.to_vec(),
+                            detailed_headers_vec: detailed_headers_vec.to_vec(),
+                            detailed_item: detailed_item,
                         }
                     }}
                 )
@@ -153,7 +175,7 @@ pub fn SimpleList<'a>(
                         div {
                             key: "{item.id}",
                             id: "{item.id}",
-                            for (i, header) in headers_vec.iter().enumerate() {
+                            for (i, _header) in headers_vec.iter().enumerate() {
                                 match i {
                                     // 0 => format!("{}: {}", (*header).to_string(), item.props.0),
                                     0 => format!("{} ", item.props.0),
@@ -175,8 +197,8 @@ pub fn SimpleList<'a>(
 pub fn DetailedView<'a>(
     cx: Scope,
     model: &'a str,
-    headers_vec: Vec<&'static str>,
-    item_vec: Vec<SimpleItemProperties<'a>>,
+    detailed_headers_vec: Vec<&'static str>,
+    detailed_item: &'a DetailedItemProperties<'a>,
 ) -> Element<'a> {
         cx.render({ rsx!{
             div {
@@ -184,15 +206,26 @@ pub fn DetailedView<'a>(
                 style: "height: 40svh",
                 class: "mt-9 grid gap-2.5 overflow-scroll {model} detailed-view",
 
-                for (header, index) in headers_vec.iter().enumerate() {
-                    rsx!(
-                        div {
-                            key: "{index}",
-                            id: "{header}",
-                            "{index}: {index}"
+                rsx!(
+                    div {
+                        key: "{detailed_item.id}",
+                        id: "{detailed_item.id}",
+                        for (i, _header) in detailed_headers_vec.iter().enumerate() {
+                            match i {
+                                // 0 => format!("{}: {}", (*header).to_string(), item.props.0),
+                                0 => format!("{} ", detailed_item.props.0),
+                                1 => format!("{} ", detailed_item.props.1),
+                                2 => format!("{} ", detailed_item.props.2),
+                                3 => format!("{} ", detailed_item.props.3),
+                                4 => format!("{} ", detailed_item.props.4),
+                                5 => format!("{} ", detailed_item.props.5),
+                                6 => format!("{} ", detailed_item.props.6),
+                                7 => format!("{} ", detailed_item.props.7),
+                                _ => "".to_string()
+                            }
                         }
-                    )
-                }
+                    }
+                )
             }
         }})
 }

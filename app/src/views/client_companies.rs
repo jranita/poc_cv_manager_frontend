@@ -1,12 +1,13 @@
 #![allow(non_snake_case)]
-use chrono::DateTime;
 use dioxus::prelude::*;
-use dioxus_router::components::Link;
-
-use crate::{models::client_company::ClientCompany, router::Route, services::client_companies::get_client_companies, views::{shared::Card, Props, SimpleItemProperties}};
+use crate::{
+    services::client_companies::{get_client_companies, get_client_company},
+    views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
+};
 
 // Set here what you want to show, id and date_created are already passed to the component
 const CLIENT_COMPANY_SIMPLE_HEADERS: [&str; 1] = ["company_name"];
+const CLIENT_COMPANY_DETAILED_HEADERS: [&str; 2] = ["company_name", "date_created"];
 
 #[component]
 pub fn ClientCompanies(cx: Scope) -> Element {
@@ -25,11 +26,19 @@ pub fn ClientCompanies(cx: Scope) -> Element {
     })
     .value()?;
 
+    let client_company = use_future!(cx, || async move {
+        get_client_company(1)
+        .await
+        .unwrap()
+    })
+    .value()?;
+
     let client_company_simple_headers_vec: Vec<&'static str> = Vec::from(CLIENT_COMPANY_SIMPLE_HEADERS);
+    let client_company_detailed_headers_vec: Vec<&'static str> = Vec::from(CLIENT_COMPANY_DETAILED_HEADERS);
 
     // Set here what you want to show, should match CLIENT_COMPANY_SIMPLE_HEADERS
     // TODO automate this
-    let mut props_vec: Vec<Props> = vec![];
+    let mut props_vec: Vec<SimpleProps> = vec![];
     for item in client_company_vec {
         props_vec.push(
             (&item.company_name, "", "", "", "")
@@ -42,6 +51,15 @@ pub fn ClientCompanies(cx: Scope) -> Element {
         props: props_vec[item.0],
     }).collect();
 
+    let detailed_props: DetailedProps = (&client_company.company_name, "", "", "", "", "", "", "");
+
+    let detailed_item: DetailedItemProperties = DetailedItemProperties{
+        id: client_company.id,
+        date_created: client_company.date_created.to_string(),
+        props: detailed_props,
+    };
+    // end TODO
+
     render! {
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -51,16 +69,20 @@ pub fn ClientCompanies(cx: Scope) -> Element {
                     r#type: &"simple_list",
                     model: &"ClientCompany",
                     headers_vec: client_company_simple_headers_vec.clone(),
+                    detailed_headers_vec: client_company_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
 
                 Card {
-                    card_title: title.clone(),
-                    card_subtitle: subtitle.clone(),
+                    card_title: title,
+                    card_subtitle: subtitle,
                     r#type: &"detailed_view",
                     model: &"ClientCompany",
-                    headers_vec: client_company_simple_headers_vec,
-                    item_vec: item_vec,
+                    headers_vec: client_company_detailed_headers_vec.clone(),
+                    detailed_headers_vec: client_company_detailed_headers_vec.clone(),
+                    item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
             },
         },

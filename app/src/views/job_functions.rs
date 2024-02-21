@@ -1,13 +1,12 @@
 #![allow(non_snake_case)]
-use chrono::DateTime;
 use dioxus::prelude::*;
-use dioxus_router::components::Link;
-
 use crate::{
-    models::job_function::JobFunction, router::Route, services::job_functions::get_job_functions, views::{shared::Card, Props, SimpleItemProperties}};
+    services::job_functions::{get_job_functions, get_job_function},
+    views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
+};
 
-
-const JOB_FUNCTION_SIMPLE_HEADERS: [&str; 1] = ["company_name"];
+const JOB_FUNCTION_SIMPLE_HEADERS: [&str; 1] = ["job_function_name"];
+const JOB_FUNCTION_DETAILED_HEADERS: [&str; 2] = ["job_function_name", "date_created"];
 
 #[component]
 pub fn JobFunctions(cx: Scope) -> Element {
@@ -26,11 +25,19 @@ pub fn JobFunctions(cx: Scope) -> Element {
     })
     .value()?;
 
+    let job_function = use_future!(cx, || async move {
+        get_job_function(1)
+        .await
+        .unwrap()
+    })
+    .value()?;
+
     let job_function_simple_headers_vec: Vec<&'static str> = Vec::from(JOB_FUNCTION_SIMPLE_HEADERS);
+    let job_function_detailed_headers_vec: Vec<&'static str> = Vec::from(JOB_FUNCTION_DETAILED_HEADERS);
 
     // Set here what you want to show, should match JOB_FUNCTION_SIMPLE_HEADERS
     // TODO automate this
-    let mut props_vec: Vec<Props> = vec![];
+    let mut props_vec: Vec<SimpleProps> = vec![];
     for item in job_function_vec {
         props_vec.push(
             (&item.job_function_name, "", "", "", "")
@@ -43,6 +50,14 @@ pub fn JobFunctions(cx: Scope) -> Element {
         props: props_vec[item.0],
     }).collect();
 
+    let detailed_props: DetailedProps = (&job_function.job_function_name, "", "", "", "", "", "", "");
+
+    let detailed_item: DetailedItemProperties = DetailedItemProperties{
+        id: job_function.id,
+        date_created: job_function.date_created.to_string(),
+        props: detailed_props,
+    };
+
     render! {
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -52,7 +67,9 @@ pub fn JobFunctions(cx: Scope) -> Element {
                     r#type: &"simple_list",
                     model: &"JobFunction",
                     headers_vec: job_function_simple_headers_vec.clone(),
+                    detailed_headers_vec: job_function_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
 
                 Card {
@@ -61,7 +78,9 @@ pub fn JobFunctions(cx: Scope) -> Element {
                     r#type: &"detailed_view",
                     model: &"JobFunction",
                     headers_vec: job_function_simple_headers_vec,
-                    item_vec: item_vec,
+                    detailed_headers_vec: job_function_detailed_headers_vec.clone(),
+                    item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
             },
         },

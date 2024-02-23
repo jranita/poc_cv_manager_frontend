@@ -1,25 +1,21 @@
 #![allow(non_snake_case)]
-use dioxus::prelude::*;
 use super::{DetailedItemProperties, SimpleItemProperties};
+use dioxus::prelude::*;
 
-struct ComplexData(i32);
+pub struct ComplexData(i32);
 
 #[derive(Props)]
-pub struct CustomFancyButtonProps<'a> {
+pub struct ListButtonProps<'a> {
     on_click: EventHandler<'a, ComplexData>,
 }
 
-pub fn CustomFancyButton<'a>(cx: Scope<'a, CustomFancyButtonProps<'a>>) -> Element<'a> {
-    cx.render(
-        rsx!(button {
-            class: "fancy-button",
-            onclick: move |_| cx.props.on_click.call(ComplexData(0)),
-            "click me pls."
-        })
-    )
+pub fn ListButton<'a>(cx: Scope<'a, ListButtonProps<'a>>) -> Element<'a> {
+    cx.render(rsx!(button {
+        class: "fancy-button",
+        onclick: move |_| cx.props.on_click.call(ComplexData(0)),
+        "click me pls."
+    }))
 }
-
-
 
 #[component]
 pub fn Card<'a>(
@@ -33,7 +29,7 @@ pub fn Card<'a>(
     item_vec: Vec<SimpleItemProperties<'a>>,
     detailed_item: DetailedItemProperties<'a>,
 ) -> Element {
-    cx.render({ rsx!{
+    cx.render({ let id = 999; rsx!{
             button {
                 onclick: move |event| log::info!("Clicked! Event: {event:?}"),
                 "click me!"
@@ -159,12 +155,13 @@ pub fn Card<'a>(
 
 #[component]
 pub fn SimpleList<'a>(
-    cx: Scope,
+    cx: Scope<'a, CustomFancyButtonProps<'a>>,
     model: &'a str,
     headers_vec: Vec<&'static str>,
     item_vec: Vec<SimpleItemProperties<'a>>,
 ) -> Element<'a> {
-        cx.render({ rsx!{
+    cx.render({
+        rsx! {
             div {
                 aria_label: "content",
                 style: "height: 40svh",
@@ -172,7 +169,8 @@ pub fn SimpleList<'a>(
 
                 for item in item_vec {
                     rsx!(
-                        div {
+                        button {
+                            onclick: move |_| cx.props.on_click.call(ComplexData(0)),
                             key: "{item.id}",
                             id: "{item.id}",
                             for (i, _header) in headers_vec.iter().enumerate() {
@@ -185,12 +183,13 @@ pub fn SimpleList<'a>(
                                     4 => format!(" {}", item.props.4),
                                     _ => "".to_string()
                                 }
-                            }
+                            },
                         }
                     )
                 }
             }
-        }})
+        }
+    })
 }
 
 #[component]
@@ -200,7 +199,8 @@ pub fn DetailedView<'a>(
     detailed_headers_vec: Vec<&'static str>,
     detailed_item: &'a DetailedItemProperties<'a>,
 ) -> Element<'a> {
-        cx.render({ rsx!{
+    cx.render({
+        rsx! {
             div {
                 aria_label: "content",
                 style: "height: 40svh",
@@ -227,5 +227,6 @@ pub fn DetailedView<'a>(
                     }
                 )
             }
-        }})
+        }
+    })
 }

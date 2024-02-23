@@ -9,9 +9,16 @@ pub async fn get_keywords(
     order_by: String,
     order_direction: String,
     filter: String,
-    ) -> Result<Vec<Keyword>, Error> {
-
-    let url: String = format!("{}keywords?offset={}&limit={}&order_by={}&order_direction={}&filter={}", super::BASE_API_URL, offset, limit, order_by, order_direction, filter);
+) -> Result<Vec<Keyword>, Error> {
+    let url: String = format!(
+        "{}keywords?offset={}&limit={}&order_by={}&order_direction={}&filter={}",
+        super::BASE_API_URL,
+        offset,
+        limit,
+        order_by,
+        order_direction,
+        filter
+    );
 
     let mut headers = HeaderMap::new();
     headers.insert(
@@ -31,14 +38,10 @@ pub async fn get_keywords(
         .await?
         .json::<Vec<Keyword>>()
         .await
-
 }
 
-pub async fn get_keyword(
-    id: usize,
-    ) -> Result<Keyword, Error> {
-
-    let url: String = format!("{}keywords/0?id={}", super::BASE_API_URL, id);
+pub async fn get_keyword(id: usize) -> Result<Keyword, Error> {
+    let url: String = format!("{}keywords/detail?id={}", super::BASE_API_URL, id);
 
     let mut headers = HeaderMap::new();
     headers.insert(
@@ -58,6 +61,4 @@ pub async fn get_keyword(
         .await?
         .json::<Keyword>()
         .await
-
 }
-

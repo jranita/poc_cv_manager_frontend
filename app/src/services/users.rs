@@ -1,4 +1,3 @@
-
 use reqwest;
 use reqwest::header::{HeaderMap, ACCEPT, ACCESS_CONTROL_ALLOW_ORIGIN, ORIGIN};
 use reqwest::Error;
@@ -11,9 +10,16 @@ pub async fn get_users(
     order_by: String,
     order_direction: String,
     filter: String,
-    ) -> Result<Vec<User>, Error> {
-
-    let url: String = format!("{}users?offset={}&limit={}&order_by={}&order_direction={}&filter={}", super::BASE_API_URL, offset, limit, order_by, order_direction, filter);
+) -> Result<Vec<User>, Error> {
+    let url: String = format!(
+        "{}users?offset={}&limit={}&order_by={}&order_direction={}&filter={}",
+        super::BASE_API_URL,
+        offset,
+        limit,
+        order_by,
+        order_direction,
+        filter
+    );
 
     let mut headers = HeaderMap::new();
     headers.insert(
@@ -35,11 +41,8 @@ pub async fn get_users(
         .await
 }
 
-pub async fn get_user(
-    id: usize,
-    ) -> Result<User, Error> {
-
-    let url: String = format!("{}users/0?id={}", super::BASE_API_URL, id);
+pub async fn get_user(id: usize) -> Result<User, Error> {
+    let url: String = format!("{}users/detail?id={}", super::BASE_API_URL, id);
 
     let mut headers = HeaderMap::new();
     headers.insert(

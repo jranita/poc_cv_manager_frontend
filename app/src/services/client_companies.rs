@@ -42,11 +42,8 @@ pub async fn get_client_companies(
         .await
 }
 
-pub async fn get_client_company(
-    id: usize,
-    ) -> Result<ClientCompany, Error> {
-
-    let url: String = format!("{}clients/0?id={}", super::BASE_API_URL, id);
+pub async fn get_client_company(id: usize) -> Result<ClientCompany, Error> {
+    let url: String = format!("{}clients/detail?id={}", super::BASE_API_URL, id);
 
     let mut headers = HeaderMap::new();
     headers.insert(
@@ -67,4 +64,3 @@ pub async fn get_client_company(
         .json::<ClientCompany>()
         .await
 }
-

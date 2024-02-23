@@ -45,7 +45,7 @@ pub async fn get_job_function(
     id: usize,
     ) -> Result<JobFunction, Error> {
 
-    let url: String = format!("{}jobfunctions/0?id={}", super::BASE_API_URL, id);
+    let url: String = format!("{}jobfunctions/detail?id={}", super::BASE_API_URL, id);
 
     let mut headers = HeaderMap::new();
     headers.insert(

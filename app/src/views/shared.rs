@@ -4,18 +4,18 @@ use dioxus::prelude::*;
 
 pub struct ComplexData(i32);
 
-#[derive(Props)]
-pub struct ListButtonProps<'a> {
-    on_click: EventHandler<'a, ComplexData>,
-}
+// #[derive(Props)]
+// pub struct ListButtonProps<'a> {
+//     on_click: EventHandler<'a, ComplexData>,
+// }
 
-pub fn ListButton<'a>(cx: Scope<'a, ListButtonProps<'a>>) -> Element<'a> {
-    cx.render(rsx!(button {
-        class: "fancy-button",
-        onclick: move |_| cx.props.on_click.call(ComplexData(0)),
-        "click me pls."
-    }))
-}
+// pub fn ListButton<'a>(cx: Scope<'a, ListButtonProps<'a>>) -> Element<'a> {
+//     cx.render(rsx!(button {
+//         class: "fancy-button",
+//         onclick: move |_| cx.props.on_click.call(ComplexData(0)),
+//         "click me pls."
+//     }))
+// }
 
 #[component]
 pub fn Card<'a>(
@@ -28,12 +28,13 @@ pub fn Card<'a>(
     detailed_headers_vec: Vec<&'static str>,
     item_vec: Vec<SimpleItemProperties<'a>>,
     detailed_item: DetailedItemProperties<'a>,
+    on_click: EventHandler<'a, u32>,
 ) -> Element {
-    cx.render({ let id = 999; rsx!{
-            button {
-                onclick: move |event| log::info!("Clicked! Event: {event:?}"),
-                "click me!"
-            }
+    log::info!("fn shared Event:???");
+    cx.render({
+        let id = 999;
+        log::info!("cx.render Event:???");
+        rsx!{
             div { aria_label: "card", class: "p-8 m-10 rounded-3xl bg-white max-w-sm w-full",
                 if r#type == &"simple_list"  {
                     cx.render(
@@ -86,6 +87,7 @@ pub fn Card<'a>(
                                 model: model,
                                 headers_vec: headers_vec.to_vec(),
                                 item_vec: item_vec.to_vec(),
+                                on_click: on_click(),
                             }
 
                         }}
@@ -159,9 +161,14 @@ pub fn SimpleList<'a>(
     model: &'a str,
     headers_vec: Vec<&'static str>,
     item_vec: Vec<SimpleItemProperties<'a>>,
+    on_click: EventHandler<'a, u32>,
 ) -> Element<'a> {
     cx.render({
         rsx! {
+            button {
+                onclick: move |event| log::info!("Clicked166! Event: {event:?}"),
+                "click me!"
+            },
             div {
                 aria_label: "content",
                 style: "height: 40svh",
@@ -169,8 +176,11 @@ pub fn SimpleList<'a>(
 
                 for item in item_vec {
                     rsx!(
-                        button {
-                            onclick: move |_| cx.props.on_click.call(ComplexData(0)),
+                        div {
+                            // onclick: move |_| cx.props.on_click.call(ComplexData(0)),
+                            // onclick: move |event| log::info!("Clicked182! Event: {event:?}"),
+                            onclick: move |_| log::info!("Clicked182! id: {item:?}"),
+                            onclick: move |_| on_click.call(item.id),
                             key: "{item.id}",
                             id: "{item.id}",
                             for (i, _header) in headers_vec.iter().enumerate() {

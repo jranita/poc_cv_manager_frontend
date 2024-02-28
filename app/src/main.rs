@@ -22,6 +22,7 @@ fn main() {
 }
 
 fn app(cx: Scope) -> Element {
+    log::info!("fn app Event:???");
     render! {
         link { rel: "stylesheet", href: "/output.css" },
         Router::<Route> {}

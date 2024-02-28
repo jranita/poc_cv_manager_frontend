@@ -65,6 +65,10 @@ pub fn Users(cx: Scope) -> Element {
     let mut item_vec: Vec<SimpleItemProperties> = item_unsorted_vec;
     item_vec.sort_by_key(|x| x.props.0);
 
+    fn click_callback(id: u32) {
+        log::info!("click_callback: {id}");
+    }
+
     render! {
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -77,6 +81,7 @@ pub fn Users(cx: Scope) -> Element {
                     detailed_headers_vec: user_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
+                    on_click: click_callback,
                 },
 
                 Card {
@@ -88,6 +93,7 @@ pub fn Users(cx: Scope) -> Element {
                     detailed_headers_vec: user_detailed_headers_vec,
                     item_vec: item_vec,
                     detailed_item: detailed_item,
+                    on_click: click_callback,
                 },
             },
         },

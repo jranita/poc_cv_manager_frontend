@@ -60,6 +60,10 @@ pub fn ClientCompanies(cx: Scope) -> Element {
     };
     // end TODO
 
+    fn click_callback(id: u32) {
+        log::info!("click_callback: {id}");
+    }
+
     render! {
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -72,6 +76,7 @@ pub fn ClientCompanies(cx: Scope) -> Element {
                     detailed_headers_vec: client_company_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
+                    on_click: click_callback,
                 },
 
                 Card {
@@ -83,6 +88,7 @@ pub fn ClientCompanies(cx: Scope) -> Element {
                     detailed_headers_vec: client_company_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
+                    on_click: click_callback,
                 },
             },
         },

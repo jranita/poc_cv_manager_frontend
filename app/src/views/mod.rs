@@ -28,6 +28,7 @@ pub fn HomeLink(cx: Scope) -> Element {
 pub type SimpleProps<'a> = (&'a str, &'a str, &'a str, &'a str, &'a str);
 pub type DetailedProps<'a> = (&'a str, &'a str, &'a str, &'a str, &'a str, &'a str, &'a str, &'a str);
 
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct SimpleItemProperties<'a> {
     id: i32,
@@ -40,6 +41,52 @@ pub struct DetailedItemProperties<'a> {
     id: i32,
     date_created: String,
     props: DetailedProps<'a>,
+}
+
+pub fn changeCurrentObject(cx: Scope, model: str, newId: u32) -> () {
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+
+    match model {
+        ClientCompany => currentDetailStruct.write().ClientCompany = newId,
+        CV => currentDetailStruct.write().CV = newId,
+        JobFunction => currentDetailStruct.write().JobFunction = newId,
+        Keyword => currentDetailStruct.write().Keyword = newId,
+        User => currentDetailStruct.write().User = newId,
+        _ => return ()
+    }
+    let currentObjectId = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+    ()
+    // let style = if dark_mode.read().0 {
+    //     "color:white"
+    // } else {
+    //     ""
+    // };
+
+    // cx.render(rsx!(label {
+    //     style: "{style}",
+    //     "Dark Mode",
+    //     input {
+    //         r#type: "checkbox",
+    //         oninput: move |event| {
+    //             let is_enabled = event.value == "true";
+    //             dark_mode.write().0 = is_enabled;
+    //         },
+    //     },
+    // }))
+}
+
+pub fn getCurrentObject(cx: Scope, model: str) -> u32 {
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+
+    match model {
+        ClientCompany => return currentDetailStruct.read().ClientCompany = newId,
+        CV => currentDetailStruct.write().CV = newId,
+        JobFunction => currentDetailStruct.write().JobFunction = newId,
+        Keyword => currentDetailStruct.write().Keyword = newId,
+        User => currentDetailStruct.write().User = newId,
+        _ => return 1
+    }
+
 }
 
 

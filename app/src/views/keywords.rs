@@ -9,8 +9,10 @@ use dioxus::prelude::*;
 const KEYWORD_SIMPLE_HEADERS: [&str; 1] = ["keyword_name"];
 const KEYWORD_DETAILED_HEADERS: [&str; 1] = ["keyword_name"];
 
+
 #[component]
 pub fn Keywords(cx: Scope) -> Element {
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
     let title: String = "Keywords".to_string();
     let subtitle: String = "ttt1".to_string();
     let keyword_vec = use_future!(cx, || async move {

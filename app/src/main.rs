@@ -11,6 +11,20 @@ pub mod models;
 pub mod services;
 use router::Route;
 
+struct CurrentDetailedObjects {
+    ClientCompany: i32,
+    CV: i32,
+    JobFunction: i32,
+    Keyword: i32,
+    User: i32,
+}
+
+impl Default for CurrentDetailedObjects {
+    fn default() -> Self {
+        Self { ClientCompany: 1, CV: 1, JobFunction: 1, Keyword: 1, User: 1 }
+    }
+}
+
 fn main() {
     // Init debug
     dioxus_logger::init(LevelFilter::Info).expect("failed to init logger");
@@ -22,6 +36,8 @@ fn main() {
 }
 
 fn app(cx: Scope) -> Element {
+    use_shared_state_provider(cx, || CurrentDetailedObjects::default());
+
     log::info!("fn app Event:???");
     render! {
         link { rel: "stylesheet", href: "/output.css" },

@@ -7,6 +7,7 @@ use dioxus::{
     core_macro::{component, render},
 };
 use dioxus_router::components::Link;
+use crate::CurrentDetailedObjects;
 
 pub mod navbar;
 pub mod home;
@@ -43,7 +44,7 @@ pub struct DetailedItemProperties<'a> {
     props: DetailedProps<'a>,
 }
 
-pub fn changeCurrentObject(cx: Scope, model: str, newId: u32) -> () {
+pub fn changeCurrentObject(cx: Scope, model: String, newId: i32) -> () {
     let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
 
     match model {
@@ -75,16 +76,16 @@ pub fn changeCurrentObject(cx: Scope, model: str, newId: u32) -> () {
     // }))
 }
 
-pub fn getCurrentObject(cx: Scope, model: str) -> u32 {
-    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+pub fn getCurrentObject(cx: Scope, model: String) -> i32 {
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap().read();
 
     match model {
-        ClientCompany => return currentDetailStruct.read().ClientCompany = newId,
-        CV => currentDetailStruct.write().CV = newId,
-        JobFunction => currentDetailStruct.write().JobFunction = newId,
-        Keyword => currentDetailStruct.write().Keyword = newId,
-        User => currentDetailStruct.write().User = newId,
-        _ => return 1
+        ClientCompany => currentDetailStruct.ClientCompany,
+        CV => currentDetailStruct.CV,
+        JobFunction => currentDetailStruct.JobFunction,
+        Keyword => currentDetailStruct.Keyword,
+        User => currentDetailStruct.User,
+        _ => 1,
     }
 
 }

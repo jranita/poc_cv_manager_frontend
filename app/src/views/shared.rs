@@ -1,4 +1,6 @@
 #![allow(non_snake_case)]
+use crate::{views::changeCurrentObject, CurrentDetailedObjects};
+
 use super::{DetailedItemProperties, SimpleItemProperties};
 use dioxus::prelude::*;
 
@@ -87,7 +89,9 @@ pub fn Card<'a>(
                                 model: model,
                                 headers_vec: headers_vec.to_vec(),
                                 item_vec: item_vec.to_vec(),
-                                on_click: on_click(),
+                                on_click: move |_| {
+                                    log::info!("fn shared Event:??? {:?}", id);
+                                },
                             }
 
                         }}
@@ -163,10 +167,11 @@ pub fn SimpleList<'a>(
     item_vec: Vec<SimpleItemProperties<'a>>,
     on_click: EventHandler<'a, u32>,
 ) -> Element<'a> {
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
     cx.render({
         rsx! {
             button {
-                onclick: move |event| log::info!("Clicked166! Event: {event:?}"),
+                onclick: move |event| log::info!("Clicked166! Event: {event:?} {:?}", currentDetailStruct.read().Keyword),
                 "click me!"
             },
             div {
@@ -177,10 +182,11 @@ pub fn SimpleList<'a>(
                 for item in item_vec {
                     rsx!(
                         div {
-                            // onclick: move |_| cx.props.on_click.call(ComplexData(0)),
                             // onclick: move |event| log::info!("Clicked182! Event: {event:?}"),
-                            onclick: move |_| log::info!("Clicked182! id: {item:?}"),
-                            onclick: move |_| on_click.call(item.id),
+                            // onclick: move |_| log::info!("Clicked185! id: {:?}", item.id),
+                            // onclick: |_| changeCurrentObject(cx, model.to_string(), item.id),
+                            // TODO shared state will update but detailed view redraw is not yet triggered
+                            onclick: move |_| currentDetailStruct.write().Keyword = item.id,
                             key: "{item.id}",
                             id: "{item.id}",
                             for (i, _header) in headers_vec.iter().enumerate() {

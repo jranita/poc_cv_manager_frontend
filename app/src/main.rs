@@ -11,6 +11,7 @@ pub mod models;
 pub mod services;
 use router::Route;
 
+#[derive(Debug, PartialEq, Clone)]
 struct CurrentDetailedObjects {
     ClientCompany: i32,
     CV: i32,

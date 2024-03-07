@@ -1,10 +1,10 @@
 #![allow(non_snake_case)]
-use crate::{views::changeCurrentObject, CurrentDetailedObjects};
+use crate::CurrentDetailedObjects;
 
 use super::{DetailedItemProperties, SimpleItemProperties};
 use dioxus::prelude::*;
 
-pub struct ComplexData(i32);
+pub struct ComplexData(usize);
 
 // #[derive(Props)]
 // pub struct ListButtonProps<'a> {
@@ -30,11 +30,9 @@ pub fn Card<'a>(
     detailed_headers_vec: Vec<&'static str>,
     item_vec: Vec<SimpleItemProperties<'a>>,
     detailed_item: DetailedItemProperties<'a>,
-    on_click: EventHandler<'a, u32>,
 ) -> Element {
     log::info!("fn shared Event:???");
     cx.render({
-        let id = 999;
         log::info!("cx.render Event:???");
         rsx!{
             div { aria_label: "card", class: "p-8 m-10 rounded-3xl bg-white max-w-sm w-full",
@@ -89,9 +87,6 @@ pub fn Card<'a>(
                                 model: model,
                                 headers_vec: headers_vec.to_vec(),
                                 item_vec: item_vec.to_vec(),
-                                on_click: move |_| {
-                                    log::info!("fn shared Event:??? {:?}", id);
-                                },
                             }
 
                         }}
@@ -165,15 +160,10 @@ pub fn SimpleList<'a>(
     model: &'a str,
     headers_vec: Vec<&'static str>,
     item_vec: Vec<SimpleItemProperties<'a>>,
-    on_click: EventHandler<'a, u32>,
 ) -> Element<'a> {
     let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
     cx.render({
         rsx! {
-            button {
-                onclick: move |event| log::info!("Clicked166! Event: {event:?} {:?}", currentDetailStruct.read().Keyword),
-                "click me!"
-            },
             div {
                 aria_label: "content",
                 style: "height: 40svh",
@@ -182,11 +172,10 @@ pub fn SimpleList<'a>(
                 for item in item_vec {
                     rsx!(
                         div {
-                            // onclick: move |event| log::info!("Clicked182! Event: {event:?}"),
-                            // onclick: move |_| log::info!("Clicked185! id: {:?}", item.id),
-                            // onclick: |_| changeCurrentObject(cx, model.to_string(), item.id),
-                            // TODO shared state will update but detailed view redraw is not yet triggered
-                            onclick: move |_| currentDetailStruct.write().Keyword = item.id,
+                            onclick: move |_| {
+                                currentDetailStruct.write().Keyword = item.id;
+                                log::info!("Clicked185! id: {:?}", currentDetailStruct.read().Keyword);
+                            },
                             key: "{item.id}",
                             id: "{item.id}",
                             for (i, _header) in headers_vec.iter().enumerate() {
@@ -215,6 +204,7 @@ pub fn DetailedView<'a>(
     detailed_headers_vec: Vec<&'static str>,
     detailed_item: &'a DetailedItemProperties<'a>,
 ) -> Element<'a> {
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
     cx.render({
         rsx! {
             div {
@@ -225,10 +215,10 @@ pub fn DetailedView<'a>(
                 rsx!(
                     div {
                         key: "{detailed_item.id}",
+                        // id: "{detailed_item.id}",
                         id: "{detailed_item.id}",
                         for (i, _header) in detailed_headers_vec.iter().enumerate() {
                             match i {
-                                // 0 => format!("{}: {}", (*header).to_string(), item.props.0),
                                 0 => format!("{} ", detailed_item.props.0),
                                 1 => format!("{} ", detailed_item.props.1),
                                 2 => format!("{} ", detailed_item.props.2),

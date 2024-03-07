@@ -3,16 +3,15 @@ use crate::services::keywords::{get_keyword, get_keywords};
 use crate::views::{
     shared::Card, DetailedItemProperties, DetailedProps, SimpleItemProperties, SimpleProps,
 };
+use crate::CurrentDetailedObjects;
 use dioxus::prelude::*;
 
 // Set here what you want to show, id and date_created are already passed to the component
 const KEYWORD_SIMPLE_HEADERS: [&str; 1] = ["keyword_name"];
 const KEYWORD_DETAILED_HEADERS: [&str; 1] = ["keyword_name"];
 
-
 #[component]
 pub fn Keywords(cx: Scope) -> Element {
-    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
     let title: String = "Keywords".to_string();
     let subtitle: String = "ttt1".to_string();
     let keyword_vec = use_future!(cx, || async move {
@@ -28,7 +27,9 @@ pub fn Keywords(cx: Scope) -> Element {
     })
     .value()?;
 
-    let keyword = use_future!(cx, || async move { get_keyword(1).await.unwrap() }).value()?;
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+
+    let keyword = use_future!(cx, |currentDetailStruct| async move { get_keyword(currentDetailStruct.read().Keyword).await.unwrap() }).value()?;
 
     let keyword_simple_headers_vec: Vec<&'static str> = Vec::from(KEYWORD_SIMPLE_HEADERS);
     let keyword_detailed_headers_vec: Vec<&'static str> = Vec::from(KEYWORD_DETAILED_HEADERS);
@@ -58,11 +59,6 @@ pub fn Keywords(cx: Scope) -> Element {
         date_created: keyword.date_created.to_string(),
         props: detailed_props,
     };
-    // end TODO
-
-    fn click_callback(id: u32) {
-        log::info!("click_callback: {id}");
-    }
 
     render! {
         div {
@@ -76,7 +72,6 @@ pub fn Keywords(cx: Scope) -> Element {
                     detailed_headers_vec: keyword_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
-                    on_click: click_callback,
                 },
 
                 Card {
@@ -88,7 +83,6 @@ pub fn Keywords(cx: Scope) -> Element {
                     detailed_headers_vec: keyword_detailed_headers_vec,
                     item_vec: item_vec,
                     detailed_item: detailed_item,
-                    on_click: click_callback,
                 },
             },
         },

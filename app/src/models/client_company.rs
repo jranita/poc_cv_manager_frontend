@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ClientCompany {
-    pub id: i32,
+    pub id: usize,
     pub company_name: String,
     pub date_created: NaiveDateTime,
 }

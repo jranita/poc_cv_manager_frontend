@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Keyword {
-    pub id: i32,
+    pub id: usize,
     pub keyword_name: String,
     pub date_created: NaiveDateTime,
 }

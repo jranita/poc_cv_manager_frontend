@@ -3,13 +3,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct User {
-    pub id: i32,
+    pub id: usize,
     pub firstname: String,
     pub lastname: String,
     pub email: String,
     pub pass: String,
     pub role: String,
-    pub cv_id_list: Vec<i32>,
+    pub cv_id_list: Vec<usize>,
     pub date_created: NaiveDateTime,
 }
 
@@ -26,13 +26,13 @@ pub struct NewUser {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct PasswordStruct {
-    pub user_id: i32,
+    pub user_id: usize,
     pub old_password: String,
     pub new_password: String,
 }
 
 #[derive(Clone, Debug)]
 pub struct CurrentUser {
-    pub id: i32,
+    pub id: usize,
     pub role: String,
 }

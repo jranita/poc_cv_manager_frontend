@@ -59,10 +59,6 @@ pub fn Cvs(cx: Scope) -> Element {
         props: detailed_props,
     };
 
-    fn click_callback(id: u32) {
-        log::info!("click_callback: {id}");
-    }
-
     render! {
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -75,7 +71,6 @@ pub fn Cvs(cx: Scope) -> Element {
                     detailed_headers_vec: cv_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
-                    on_click: click_callback,
                 },
 
                 Card {
@@ -87,7 +82,6 @@ pub fn Cvs(cx: Scope) -> Element {
                     detailed_headers_vec: cv_detailed_headers_vec,
                     item_vec: item_vec,
                     detailed_item: detailed_item,
-                    on_click: click_callback,
                 },
             },
         },

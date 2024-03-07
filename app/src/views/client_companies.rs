@@ -4,6 +4,7 @@ use crate::{
     services::client_companies::{get_client_companies, get_client_company},
     views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
 };
+use crate::CurrentDetailedObjects;
 
 // Set here what you want to show, id and date_created are already passed to the component
 const CLIENT_COMPANY_SIMPLE_HEADERS: [&str; 1] = ["company_name"];
@@ -26,18 +27,20 @@ pub fn ClientCompanies(cx: Scope) -> Element {
     })
     .value()?;
 
-    let client_company = use_future!(cx, || async move {
-        get_client_company(1)
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+
+    let client_company = use_future!(cx, |currentDetailStruct| async move {
+        get_client_company(currentDetailStruct.read().ClientCompany)
         .await
         .unwrap()
     })
     .value()?;
 
+    let client_company = use_future!(cx, |currentDetailStruct| async move { get_client_company(currentDetailStruct.read().ClientCompany).await.unwrap() }).value()?;
+
     let client_company_simple_headers_vec: Vec<&'static str> = Vec::from(CLIENT_COMPANY_SIMPLE_HEADERS);
     let client_company_detailed_headers_vec: Vec<&'static str> = Vec::from(CLIENT_COMPANY_DETAILED_HEADERS);
 
-    // Set here what you want to show, should match CLIENT_COMPANY_SIMPLE_HEADERS
-    // TODO automate this
     let mut props_vec: Vec<SimpleProps> = vec![];
     for item in client_company_vec {
         props_vec.push(
@@ -58,11 +61,6 @@ pub fn ClientCompanies(cx: Scope) -> Element {
         date_created: client_company.date_created.to_string(),
         props: detailed_props,
     };
-    // end TODO
-
-    fn click_callback(id: u32) {
-        log::info!("click_callback: {id}");
-    }
 
     render! {
         div {
@@ -76,7 +74,6 @@ pub fn ClientCompanies(cx: Scope) -> Element {
                     detailed_headers_vec: client_company_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
-                    on_click: click_callback,
                 },
 
                 Card {
@@ -88,7 +85,6 @@ pub fn ClientCompanies(cx: Scope) -> Element {
                     detailed_headers_vec: client_company_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
-                    on_click: click_callback,
                 },
             },
         },

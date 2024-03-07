@@ -13,11 +13,11 @@ use router::Route;
 
 #[derive(Debug, PartialEq, Clone)]
 struct CurrentDetailedObjects {
-    ClientCompany: i32,
-    CV: i32,
-    JobFunction: i32,
-    Keyword: i32,
-    User: i32,
+    ClientCompany: usize,
+    CV: usize,
+    JobFunction: usize,
+    Keyword: usize,
+    User: usize,
 }
 
 impl Default for CurrentDetailedObjects {

@@ -12,6 +12,7 @@ const KEYWORD_DETAILED_HEADERS: [&str; 1] = ["keyword_name"];
 
 #[component]
 pub fn Keywords(cx: Scope) -> Element {
+    let mut name_filter = "".to_string();
     let title: String = "Keywords".to_string();
     let subtitle: String = "ttt1".to_string();
     let keyword_vec = use_future!(cx, || async move {
@@ -66,7 +67,21 @@ pub fn Keywords(cx: Scope) -> Element {
     };
 
     render! {
+        // name_filter = "".to_string(),
         div {
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                rsx! {input {
+                    // we tell the component what to render
+
+                    // and what to do when the value changes
+                    // oninput: move |evt| name.set(evt.value.clone()),
+                    oninput: move |evt| {
+                        name_filter = evt.value.clone().to_string(); 
+                        log::info!("cx.render Filter {} {}",  evt.value.clone().to_string(), name_filter);
+                    },
+                }}
+            },
+
             div { class: "flex flex-row items-center justify-center bg-gray-200",
                 Card {
                     card_title: title.clone(),
@@ -75,7 +90,7 @@ pub fn Keywords(cx: Scope) -> Element {
                     model: &"Keyword",
                     headers_vec: keyword_simple_headers_vec.clone(),
                     detailed_headers_vec: keyword_detailed_headers_vec.clone(),
-                    item_vec: item_vec.clone(),
+                    item_vec: item_vec.clone().into_iter().filter(|x| x.props.1.contains(&name_filter)).collect(),
                     detailed_item: detailed_item.clone(),
                 },
 

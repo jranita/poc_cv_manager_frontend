@@ -31,9 +31,8 @@ pub fn Card<'a>(
     item_vec: Vec<SimpleItemProperties<'a>>,
     detailed_item: DetailedItemProperties<'a>,
 ) -> Element {
-    log::info!("fn shared Event:???");
     cx.render({
-        log::info!("cx.render Event:???");
+        log::info!("cx.render Card {}", r#type);
         rsx!{
             div { aria_label: "card", class: "p-8 m-10 rounded-3xl bg-white max-w-sm w-full",
                 if r#type == &"simple_list"  {
@@ -94,64 +93,64 @@ pub fn Card<'a>(
                 }
 
                 if r#type == &"detailed_view"  {
-                cx.render(
-                    {rsx!{
-
-                        div { aria_label: "header", class: "flex items-center space-x-2",
-                            svg {
-                                width: "24",
-                                view_box: "0 0 24 24",
-                                stroke: "currentColor",
-                                stroke_linecap: "round",
-                                stroke_linejoin: "round",
-                                fill: "none",
-                                height: "24",
-                                xmlns: "http://www.w3.org/2000/svg",
-                                stroke_width: "1.5",
-                                class: "w-8 h-8 shrink-0",
-                                path { stroke: "none", fill: "none", d: "M0 0h24v24H0z" }
-                                path { d: "M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11" }
-                            }
-                            div { class: "space-y-0.5 flex-1",
-                                h3 { class: "font-medium text-lg tracking-tight text-gray-900 leading-tight",
-                                    "\n {card_title} \n          "
-                                }
-                                p { class: "text-sm font-normal text-gray-400 leading-none",
-                                    "\n            {card_subtitle}\n          "
-                                }
-                            }
-                            a {
-                                href: "/",
-                                class: "inline-flex items-center shrink-0 justify-center w-8 h-8 rounded-full text-white bg-gray-900 focus:outline-none",
+                    cx.render(
+                        {rsx!{
+                            div { aria_label: "header", class: "flex items-center space-x-2",
                                 svg {
+                                    width: "24",
                                     view_box: "0 0 24 24",
-                                    stroke_width: "1.5",
-                                    height: "24",
+                                    stroke: "currentColor",
                                     stroke_linecap: "round",
                                     stroke_linejoin: "round",
-                                    stroke: "currentColor",
                                     fill: "none",
+                                    height: "24",
                                     xmlns: "http://www.w3.org/2000/svg",
-                                    width: "24",
-                                    class: "w-5 h-5",
-                                    path { stroke: "none", d: "M0 0h24v24H0z", fill: "none" }
-                                    path { d: "M17 7l-10 10" }
-                                    path { d: "M8 7l9 0l0 9" }
+                                    stroke_width: "1.5",
+                                    class: "w-8 h-8 shrink-0",
+                                    path { stroke: "none", fill: "none", d: "M0 0h24v24H0z" }
+                                    path { d: "M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11" }
                                 }
+                                div { class: "space-y-0.5 flex-1",
+                                    h3 { class: "font-medium text-lg tracking-tight text-gray-900 leading-tight",
+                                        "\n {card_title} \n          "
+                                    }
+                                    p { class: "text-sm font-normal text-gray-400 leading-none",
+                                        "\n            {card_subtitle}\n          "
+                                    }
+                                }
+                                a {
+                                    href: "/",
+                                    class: "inline-flex items-center shrink-0 justify-center w-8 h-8 rounded-full text-white bg-gray-900 focus:outline-none",
+                                    svg {
+                                        view_box: "0 0 24 24",
+                                        stroke_width: "1.5",
+                                        height: "24",
+                                        stroke_linecap: "round",
+                                        stroke_linejoin: "round",
+                                        stroke: "currentColor",
+                                        fill: "none",
+                                        xmlns: "http://www.w3.org/2000/svg",
+                                        width: "24",
+                                        class: "w-5 h-5",
+                                        path { stroke: "none", d: "M0 0h24v24H0z", fill: "none" }
+                                        path { d: "M17 7l-10 10" }
+                                        path { d: "M8 7l9 0l0 9" }
+                                    }
+                                }
+                                span {}
                             }
-                            span {}
-                        }
 
-                        DetailedView {
-                            model: model,
-                            detailed_headers_vec: detailed_headers_vec.to_vec(),
-                            detailed_item: detailed_item,
-                        }
-                    }}
-                )
+                            DetailedView {
+                                model: model,
+                                detailed_headers_vec: detailed_headers_vec.to_vec(),
+                                detailed_item: detailed_item,
+                            }
+                        }}
+                    )
+                }
             }
         }
-    }})
+    })
 }
 
 #[component]
@@ -189,7 +188,6 @@ pub fn SimpleList<'a>(
                                     currentDetailStruct.write().User = item.id;
                                     log::info!("Clicked181! id: {:?}", currentDetailStruct.read().User);
                                 }
-                                log::info!("Clicked183! ==: {:?} {:?}",  model, *model == "CV");
                             },
                             key: "{item.id}",
                             id: "{item.id}",

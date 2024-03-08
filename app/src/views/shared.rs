@@ -173,8 +173,23 @@ pub fn SimpleList<'a>(
                     rsx!(
                         div {
                             onclick: move |_| {
-                                currentDetailStruct.write().Keyword = item.id;
-                                log::info!("Clicked185! id: {:?}", currentDetailStruct.read().Keyword);
+                                if *model == "Keyword" {
+                                    currentDetailStruct.write().Keyword = item.id;
+                                    log::info!("Clicked178! id: {:?}", currentDetailStruct.read().Keyword);
+                                } else if *model == "ClientCompany" {
+                                    currentDetailStruct.write().ClientCompany = item.id;
+                                    log::info!("Clicked181! id: {:?}", currentDetailStruct.read().ClientCompany);
+                                } else if *model == "CV" {
+                                    currentDetailStruct.write().CV = item.id;
+                                    log::info!("Clicked181! id: {:?}", currentDetailStruct.read().CV);
+                                } else if *model == "JobFunction" {
+                                    currentDetailStruct.write().JobFunction = item.id;
+                                    log::info!("Clicked181! id: {:?}", currentDetailStruct.read().JobFunction);
+                                } else if *model == "User" {
+                                    currentDetailStruct.write().User = item.id;
+                                    log::info!("Clicked181! id: {:?}", currentDetailStruct.read().User);
+                                }
+                                log::info!("Clicked183! ==: {:?} {:?}",  model, *model == "CV");
                             },
                             key: "{item.id}",
                             id: "{item.id}",

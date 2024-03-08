@@ -29,7 +29,12 @@ pub fn Keywords(cx: Scope) -> Element {
 
     let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
 
-    let keyword = use_future!(cx, |currentDetailStruct| async move { get_keyword(currentDetailStruct.read().Keyword).await.unwrap() }).value()?;
+    let keyword = use_future!(cx, |currentDetailStruct| async move {
+        get_keyword(currentDetailStruct.read().Keyword)
+            .await
+            .unwrap()
+    })
+    .value()?;
 
     let keyword_simple_headers_vec: Vec<&'static str> = Vec::from(KEYWORD_SIMPLE_HEADERS);
     let keyword_detailed_headers_vec: Vec<&'static str> = Vec::from(KEYWORD_DETAILED_HEADERS);
@@ -67,7 +72,7 @@ pub fn Keywords(cx: Scope) -> Element {
                     card_title: title.clone(),
                     card_subtitle: subtitle.clone(),
                     r#type: &"simple_list",
-                    model: &"Keywords",
+                    model: &"Keyword",
                     headers_vec: keyword_simple_headers_vec.clone(),
                     detailed_headers_vec: keyword_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
@@ -78,7 +83,7 @@ pub fn Keywords(cx: Scope) -> Element {
                     card_title: title,
                     card_subtitle: subtitle,
                     r#type: &"detailed_view",
-                    model: &"Keywords",
+                    model: &"Keyword",
                     headers_vec: keyword_simple_headers_vec,
                     detailed_headers_vec: keyword_detailed_headers_vec,
                     item_vec: item_vec,

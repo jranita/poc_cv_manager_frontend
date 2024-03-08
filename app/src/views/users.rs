@@ -1,8 +1,10 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use crate::{
     services::users::{get_users, get_user},
     views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
 };
+use crate::CurrentDetailedObjects;
 
 // Set here what you want to show, id and date_created are already passed to the component
 const USER_SIMPLE_HEADERS: [&str; 2] = ["firstname", "lastname"];
@@ -25,8 +27,10 @@ pub fn Users(cx: Scope) -> Element {
     })
     .value()?;
 
-    let user = use_future!(cx, || async move {
-        get_user(1)
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+
+    let user = use_future!(cx, |currentDetailStruct| async move {
+        get_user(currentDetailStruct.read().User)
         .await
         .unwrap()
     })
@@ -72,7 +76,7 @@ pub fn Users(cx: Scope) -> Element {
                     card_title: title.clone(),
                     card_subtitle: subtitle.clone(),
                     r#type: &"simple_list",
-                    model: &"Users",
+                    model: &"User",
                     headers_vec: user_simple_headers_vec.clone(),
                     detailed_headers_vec: user_detailed_headers_vec.clone(),
                     item_vec: item_vec.clone(),
@@ -83,7 +87,7 @@ pub fn Users(cx: Scope) -> Element {
                     card_title: title.clone(),
                     card_subtitle: subtitle.clone(),
                     r#type: &"detailed_view",
-                    model: &"Users",
+                    model: &"User",
                     headers_vec: user_simple_headers_vec,
                     detailed_headers_vec: user_detailed_headers_vec,
                     item_vec: item_vec,

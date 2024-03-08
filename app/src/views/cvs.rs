@@ -4,6 +4,7 @@ use crate::{
     services::cvs::{get_cvs, get_cv},
     views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
 };
+use crate::CurrentDetailedObjects;
 
 // Set here what you want to show, id and date_created are already passed to the component
 const CV_SIMPLE_HEADERS: [&str; 1] = ["cv_name"];
@@ -26,8 +27,10 @@ pub fn Cvs(cx: Scope) -> Element {
     })
     .value()?;
 
-    let cv = use_future!(cx, || async move {
-        get_cv(1)
+    let currentDetailStruct = use_shared_state::<CurrentDetailedObjects>(cx).unwrap();
+
+    let cv = use_future!(cx, |currentDetailStruct| async move {
+        get_cv(currentDetailStruct.read().CV)
         .await
         .unwrap()
     })

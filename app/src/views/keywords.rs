@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use crate::services::keywords::{get_keyword, get_keywords};
+use crate::{services::keywords::{get_keyword, get_keywords}, CurrentFilters};
 use crate::views::{
     shared::Card, DetailedItemProperties, DetailedProps, SimpleItemProperties, SimpleProps,
 };
@@ -15,13 +15,16 @@ pub fn Keywords(cx: Scope) -> Element {
     let mut name_filter = "".to_string();
     let title: String = "Keywords".to_string();
     let subtitle: String = "ttt1".to_string();
-    let keyword_vec = use_future!(cx, || async move {
+    let currentFilterStruct = use_shared_state::<CurrentFilters>(cx).unwrap();
+
+    let keyword_vec = use_future!(cx, |currentFilterStruct| async move {
         get_keywords(
             999,
             0,
             "keyword_name".to_owned(),
             "ASC".to_owned(),
-            "".to_owned(),
+            currentFilterStruct.read().Keyword.clone(),
+            // "keyword_name,aba".to_owned(),
         )
         .await
         .unwrap()
@@ -70,16 +73,28 @@ pub fn Keywords(cx: Scope) -> Element {
         // name_filter = "".to_string(),
         div {
             div { class: "flex flex-row items-center justify-center bg-gray-200",
-                rsx! {input {
-                    // we tell the component what to render
+                rsx! {
+                    form {
+                        onsubmit: move |event| {
+                            let ttt = format!("Submitted! {:?}", event.data.values);
+                            log::info!("{ttt}");
 
-                    // and what to do when the value changes
-                    // oninput: move |evt| name.set(evt.value.clone()),
-                    oninput: move |evt| {
-                        name_filter = evt.value.clone().to_string(); 
-                        log::info!("cx.render Filter {} {}",  evt.value.clone().to_string(), name_filter);
-                    },
-                }}
+                            // currentFilterStruct.write().Keyword = event.data.values;
+                        },
+                        input {
+                            name: "filter",
+                        // we tell the component what to render
+
+                            // and what to do when the value changes
+                            // oninput: move |evt| name.set(evt.value.clone()),
+                            // oninput: move |evt| {
+                            //     currentFilterStruct.write().Keyword = "keyword_name".to_string() + ","+ &evt.value;
+                            //     // log::info!("cx.render Filter {} {}",  evt.value.clone().to_string(), name_filter);
+                            // },
+                        },
+                        input { r#type: "submit",},
+                    }
+                }
             },
 
             div { class: "flex flex-row items-center justify-center bg-gray-200",
@@ -90,7 +105,7 @@ pub fn Keywords(cx: Scope) -> Element {
                     model: &"Keyword",
                     headers_vec: keyword_simple_headers_vec.clone(),
                     detailed_headers_vec: keyword_detailed_headers_vec.clone(),
-                    item_vec: item_vec.clone().into_iter().filter(|x| x.props.1.contains(&name_filter)).collect(),
+                    item_vec: item_vec.clone(),
                     detailed_item: detailed_item.clone(),
                 },
 

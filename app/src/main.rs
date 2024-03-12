@@ -26,6 +26,20 @@ impl Default for CurrentDetailedObjects {
     }
 }
 
+struct CurrentFilters {
+    ClientCompany: String,
+    CV: String,
+    JobFunction: String,
+    Keyword: String,
+    User: String,
+}
+
+impl Default for CurrentFilters {
+    fn default() -> Self {
+        Self { ClientCompany: "".to_string(), CV: "".to_string(), JobFunction: "".to_string(), Keyword: "".to_string(), User: "".to_string() }
+    }
+}
+
 fn main() {
     // Init debug
     dioxus_logger::init(LevelFilter::Info).expect("failed to init logger");
@@ -38,6 +52,7 @@ fn main() {
 
 fn app(cx: Scope) -> Element {
     use_shared_state_provider(cx, || CurrentDetailedObjects::default());
+    use_shared_state_provider(cx, || CurrentFilters::default());
 
     log::info!("fn app Event:???");
     render! {

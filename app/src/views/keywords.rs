@@ -1,10 +1,10 @@
 #![allow(non_snake_case)]
+use dioxus::prelude::*;
 use crate::{services::keywords::{get_keyword, get_keywords}, CurrentFilters};
 use crate::views::{
     shared::Card, DetailedItemProperties, DetailedProps, SimpleItemProperties, SimpleProps,
 };
 use crate::CurrentDetailedObjects;
-use dioxus::prelude::*;
 
 // Set here what you want to show, id and date_created are already passed to the component
 const KEYWORD_SIMPLE_HEADERS: [&str; 1] = ["keyword_name"];
@@ -76,23 +76,30 @@ pub fn Keywords(cx: Scope) -> Element {
                 rsx! {
                     form {
                         onsubmit: move |event| {
-                            let ttt = format!("Submitted! {:?}", event.data.values);
-                            log::info!("{ttt}");
+                            // let vvv = &event.data.values;
+                            // let ttt = format!("Submitted! {:?}", vvv["filter"][0]);
+                            // log::info!("{ttt}");
 
-                            // currentFilterStruct.write().Keyword = event.data.values;
+                            currentFilterStruct.write().Keyword = "keyword_name,".to_owned() + &event.data.values["filter"][0].clone();
                         },
-                        input {
-                            name: "filter",
-                        // we tell the component what to render
 
-                            // and what to do when the value changes
-                            // oninput: move |evt| name.set(evt.value.clone()),
-                            // oninput: move |evt| {
-                            //     currentFilterStruct.write().Keyword = "keyword_name".to_string() + ","+ &evt.value;
-                            //     // log::info!("cx.render Filter {} {}",  evt.value.clone().to_string(), name_filter);
-                            // },
-                        },
-                        input { r#type: "submit",},
+                        label {
+                            class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                            "Name",
+                            input {
+                                class: "mx-5 font-bold py-1 px-4 rounded",
+                                name: "filter",
+                            // we tell the component what to render
+
+                                // and what to do when the value changes
+                                // oninput: move |evt| name.set(evt.value.clone()),
+                                // oninput: move |evt| {
+                                //     currentFilterStruct.write().Keyword = "keyword_name".to_string() + ","+ &evt.value;
+                                //     // log::info!("cx.render Filter {} {}",  evt.value.clone().to_string(), name_filter);
+                                // },
+                                },
+                            },
+                        input { r#type: "submit", value: "Filter Keywords", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },
                     }
                 }
             },

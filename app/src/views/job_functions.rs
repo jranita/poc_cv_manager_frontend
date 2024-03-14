@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 use crate::CurrentDetailedObjects;
 use crate::{
+    CurrentFilters,
     services::job_functions::{get_job_function, get_job_functions},
     views::{
         shared::Card, DetailedItemProperties, DetailedProps, SimpleItemProperties, SimpleProps,
@@ -15,13 +16,15 @@ const JOB_FUNCTION_DETAILED_HEADERS: [&str; 2] = ["job_function_name", "date_cre
 pub fn JobFunctions(cx: Scope) -> Element {
     let title: String = "Job Titles".to_string();
     let subtitle: String = "ttt3".to_string();
-    let job_function_vec = use_future!(cx, || async move {
-        get_job_functions(
+    let currentFilterStruct = use_shared_state::<CurrentFilters>(cx).unwrap();
+
+    let job_function_vec = use_future!(cx, |currentFilterStruct| async move {
+         get_job_functions(
             999,
             0,
             "job_function_name".to_owned(),
             "ASC".to_owned(),
-            "".to_owned(),
+            currentFilterStruct.read().CV.clone(),
         )
         .await
         .unwrap()
@@ -70,6 +73,26 @@ pub fn JobFunctions(cx: Scope) -> Element {
 
     render! {
         div {
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                rsx! {
+                    form {
+                        onsubmit: move |event| {
+                            currentFilterStruct.write().CV = "job_function_name,".to_owned() + "" + &event.data.values["filter"][0].clone();
+                        },
+
+                        label {
+                            class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                            "Name",
+                            input {
+                                class: "mx-5 text-gray-600 py-1 px-4 rounded",
+                                name: "filter",
+                                },
+                        },
+                        input { r#type: "submit", value: "Filter Job Functions", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },
+                    }
+                }
+            },
+
             div { class: "flex flex-row items-center justify-center bg-gray-200",
                 Card {
                     card_title: title.clone(),

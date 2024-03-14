@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use crate::{
+    CurrentFilters,
     services::users::{get_users, get_user},
     views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
 };
@@ -14,13 +15,15 @@ const USER_DETAILED_HEADERS: [&str; 3] = ["firstname", "lastname", "email"];
 pub fn Users(cx: Scope) -> Element {
     let title: String = "Users".to_string();
     let subtitle: String = "ttt2".to_string();
-    let user_vec = use_future!(cx, || async move {
+    let currentFilterStruct = use_shared_state::<CurrentFilters>(cx).unwrap();
+
+    let user_vec = use_future!(cx, |currentFilterStruct| async move {
         get_users(
             999,
             0,
             "lastname".to_owned(),
             "ASC".to_owned(),
-            "".to_owned(),
+            currentFilterStruct.read().CV.clone(),
         )
         .await
         .unwrap()
@@ -71,6 +74,36 @@ pub fn Users(cx: Scope) -> Element {
 
     render! {
         div {
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                rsx! {
+                    form {
+                        onsubmit: move |event| {
+                            currentFilterStruct.write().CV =
+                                "firstname,".to_owned() + "" + &event.data.values["firstname"][0].clone() +
+                                ",lastname,"+ "" + &event.data.values["lastname"][0].clone();
+                        },
+
+                        label {
+                            class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                            "First Name",
+                            input {
+                                class: "mx-5 text-gray-600 py-1 px-4 rounded",
+                                name: "firstname",
+                            },
+                        },
+                        label {
+                            class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                            "Last Name",
+                            input {
+                                class: "mx-5 text-gray-600 py-1 px-4 rounded",
+                                name: "lastname",
+                                },
+                        },
+                        input { r#type: "submit", value: "Filter Users", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },
+                    }
+                }
+            },
+
             div { class: "flex flex-row items-center justify-center bg-gray-200",
                 Card {
                     card_title: title.clone(),

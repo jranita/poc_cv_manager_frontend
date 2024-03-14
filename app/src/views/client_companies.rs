@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use crate::{
+    CurrentFilters,
     services::client_companies::{get_client_companies, get_client_company},
     views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
 };
@@ -14,13 +15,15 @@ const CLIENT_COMPANY_DETAILED_HEADERS: [&str; 2] = ["company_name", "date_create
 pub fn ClientCompanies(cx: Scope) -> Element {
     let title: String = "Client Companies".to_string();
     let subtitle: String = "ttt2".to_string();
-    let client_company_vec = use_future!(cx, || async move {
+    let currentFilterStruct = use_shared_state::<CurrentFilters>(cx).unwrap();
+
+    let client_company_vec = use_future!(cx, |currentFilterStruct| async move {
         get_client_companies(
             999,
             0,
             "company_name".to_owned(),
             "ASC".to_owned(),
-            "".to_owned(),
+            currentFilterStruct.read().ClientCompany.clone(),
         )
         .await
         .unwrap()
@@ -35,8 +38,6 @@ pub fn ClientCompanies(cx: Scope) -> Element {
         .unwrap()
     })
     .value()?;
-
-    let client_company = use_future!(cx, |currentDetailStruct| async move { get_client_company(currentDetailStruct.read().ClientCompany).await.unwrap() }).value()?;
 
     let client_company_simple_headers_vec: Vec<&'static str> = Vec::from(CLIENT_COMPANY_SIMPLE_HEADERS);
     let client_company_detailed_headers_vec: Vec<&'static str> = Vec::from(CLIENT_COMPANY_DETAILED_HEADERS);
@@ -64,6 +65,26 @@ pub fn ClientCompanies(cx: Scope) -> Element {
 
     render! {
         div {
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                rsx! {
+                    form {
+                        onsubmit: move |event| {
+                            currentFilterStruct.write().ClientCompany = "company_name,".to_owned() + "" + &event.data.values["filter"][0].clone();
+                        },
+
+                        label {
+                            class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                            "Name",
+                            input {
+                                class: "mx-5 text-gray-600 py-1 px-4 rounded",
+                                name: "filter",
+                                },
+                        },
+                        input { r#type: "submit", value: "Filter Clients", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },
+                    }
+                }
+            },
+
             div { class: "flex flex-row items-center justify-center bg-gray-200",
                 Card {
                     card_title: title.clone(),

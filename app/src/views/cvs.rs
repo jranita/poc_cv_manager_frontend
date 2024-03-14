@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use crate::{
+    CurrentFilters,
     services::cvs::{get_cvs, get_cv},
     views::{shared::Card, SimpleProps, DetailedProps, SimpleItemProperties, DetailedItemProperties}
 };
@@ -14,13 +15,15 @@ const CV_DETAILED_HEADERS: [&str; 2] = ["cv_name", "date_created"];
 pub fn Cvs(cx: Scope) -> Element {
     let title: String = "CVs".to_string();
     let subtitle: String = "ttt2".to_string();
-    let cv_vec = use_future!(cx, || async move {
+    let currentFilterStruct = use_shared_state::<CurrentFilters>(cx).unwrap();
+
+    let cv_vec = use_future!(cx, |currentFilterStruct| async move {
         get_cvs(
             999,
             0,
             "cv_name".to_owned(),
             "ASC".to_owned(),
-            "".to_owned(),
+            currentFilterStruct.read().CV.clone(),
         )
         .await
         .unwrap()
@@ -64,6 +67,26 @@ pub fn Cvs(cx: Scope) -> Element {
 
     render! {
         div {
+            div { class: "flex flex-row items-center justify-center bg-gray-200",
+                rsx! {
+                    form {
+                        onsubmit: move |event| {
+                            currentFilterStruct.write().CV = "cv_name,".to_owned() + "" + &event.data.values["filter"][0].clone();
+                        },
+
+                        label {
+                            class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                            "Name",
+                            input {
+                                class: "mx-5 text-gray-600 py-1 px-4 rounded",
+                                name: "filter",
+                                },
+                        },
+                        input { r#type: "submit", value: "Filter CVs", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },
+                    }
+                }
+            },
+
             div { class: "flex flex-row items-center justify-center bg-gray-200",
                 Card {
                     card_title: title.clone(),

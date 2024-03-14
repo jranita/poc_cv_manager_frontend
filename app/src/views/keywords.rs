@@ -80,14 +80,14 @@ pub fn Keywords(cx: Scope) -> Element {
                             // let ttt = format!("Submitted! {:?}", vvv["filter"][0]);
                             // log::info!("{ttt}");
 
-                            currentFilterStruct.write().Keyword = "keyword_name,".to_owned() + &event.data.values["filter"][0].clone();
+                            currentFilterStruct.write().Keyword = "keyword_name,".to_owned() + "" + &event.data.values["filter"][0].clone();
                         },
 
                         label {
                             class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
                             "Name",
                             input {
-                                class: "mx-5 font-bold py-1 px-4 rounded",
+                                class: "mx-5 text-gray-600 py-1 px-4 rounded",
                                 name: "filter",
                             // we tell the component what to render
 
@@ -121,10 +121,10 @@ pub fn Keywords(cx: Scope) -> Element {
                     card_subtitle: subtitle,
                     r#type: &"detailed_view",
                     model: &"Keyword",
-                    headers_vec: keyword_simple_headers_vec,
-                    detailed_headers_vec: keyword_detailed_headers_vec,
-                    item_vec: item_vec,
-                    detailed_item: detailed_item,
+                    headers_vec: keyword_simple_headers_vec.clone(),
+                    detailed_headers_vec: keyword_detailed_headers_vec.clone(),
+                    item_vec: item_vec.clone(),
+                    detailed_item: detailed_item.clone(),
                 },
             },
         },

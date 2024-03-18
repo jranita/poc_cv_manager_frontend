@@ -86,8 +86,26 @@ pub fn JobFunctions(cx: Scope) -> Element {
                             input {
                                 class: "mx-5 text-gray-600 py-1 px-4 rounded",
                                 name: "filter",
-                                },
+                            }
                         },
+
+                        label {
+                            class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+                            "Keywords",
+                            select {
+                                class: "mx-5 text-gray-600 py-1 px-4 rounded",
+                                option {
+                                    value: "test",
+                                    "test1"
+                                },
+                                option {
+                                    value: "test",
+                                    "test2"
+                                },
+
+                            },
+                        },
+
                         input { r#type: "submit", value: "Filter Job Functions", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },
                     }
                 }

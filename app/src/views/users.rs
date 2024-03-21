@@ -23,7 +23,7 @@ pub fn Users(cx: Scope) -> Element {
             0,
             "lastname".to_owned(),
             "ASC".to_owned(),
-            currentFilterStruct.read().CV.clone(),
+            currentFilterStruct.read().User.clone(),
         )
         .await
         .unwrap()
@@ -78,7 +78,7 @@ pub fn Users(cx: Scope) -> Element {
                 rsx! {
                     form {
                         onsubmit: move |event| {
-                            currentFilterStruct.write().CV =
+                            currentFilterStruct.write().User =
                                 "firstname,".to_owned() + "" + &event.data.values["firstname"][0].clone() +
                                 ",lastname,"+ "" + &event.data.values["lastname"][0].clone();
                         },

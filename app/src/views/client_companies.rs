@@ -69,7 +69,7 @@ pub fn ClientCompanies(cx: Scope) -> Element {
                 rsx! {
                     form {
                         onsubmit: move |event| {
-                            currentFilterStruct.write().ClientCompany = "company_name,".to_owned() + "" + &event.data.values["filter"][0].clone();
+                            currentFilterStruct.write().ClientCompany = "company_name,".to_owned() + "" + &event.data.values["name"][0].clone();
                         },
 
                         label {
@@ -77,7 +77,7 @@ pub fn ClientCompanies(cx: Scope) -> Element {
                             "Name",
                             input {
                                 class: "mx-5 text-gray-600 py-1 px-4 rounded",
-                                name: "filter",
+                                name: "name",
                                 },
                         },
                         input { r#type: "submit", value: "Filter Clients", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },

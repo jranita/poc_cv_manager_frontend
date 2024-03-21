@@ -77,7 +77,7 @@ pub fn JobFunctions(cx: Scope) -> Element {
                 rsx! {
                     form {
                         onsubmit: move |event| {
-                            currentFilterStruct.write().CV = "job_function_name,".to_owned() + "" + &event.data.values["filter"][0].clone();
+                            currentFilterStruct.write().CV = "job_function_name,".to_owned() + "" + &event.data.values["name"][0].clone();
                         },
 
                         label {
@@ -85,7 +85,7 @@ pub fn JobFunctions(cx: Scope) -> Element {
                             "Name",
                             input {
                                 class: "mx-5 text-gray-600 py-1 px-4 rounded",
-                                name: "filter",
+                                name: "name",
                             }
                         },
 

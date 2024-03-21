@@ -32,7 +32,7 @@ pub fn Card<'a>(
     detailed_item: DetailedItemProperties<'a>,
 ) -> Element {
     cx.render({
-        log::info!("cx.render Card {}", r#type);
+        log::info!("cx.render Card {} {}", r#type, model);
         rsx!{
             div { aria_label: "card", class: "p-8 m-10 rounded-3xl bg-white max-w-sm w-full",
                 if r#type == &"simple_list"  {

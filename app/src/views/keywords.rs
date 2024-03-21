@@ -80,7 +80,7 @@ pub fn Keywords(cx: Scope) -> Element {
                             // let ttt = format!("Submitted! {:?}", vvv["filter"][0]);
                             // log::info!("{ttt}");
 
-                            currentFilterStruct.write().Keyword = "keyword_name,".to_owned() + "" + &event.data.values["filter"][0].clone();
+                            currentFilterStruct.write().Keyword = "keyword_name,".to_owned() + "" + &event.data.values["name"][0].clone();
                         },
 
                         label {
@@ -88,7 +88,7 @@ pub fn Keywords(cx: Scope) -> Element {
                             "Name",
                             input {
                                 class: "mx-5 text-gray-600 py-1 px-4 rounded",
-                                name: "filter",
+                                name: "name",
                             // we tell the component what to render
 
                                 // and what to do when the value changes

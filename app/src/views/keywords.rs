@@ -100,7 +100,15 @@ pub fn Keywords(cx: Scope) -> Element {
                                 },
                             },
                         input { r#type: "submit", value: "Filter Keywords", class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" },
-                    }
+                    },
+                    input {
+                        r#type: "button",
+                        onclick: move |event| {
+                            currentFilterStruct.write().Keyword = "".to_string()
+                        },
+                        value: "Reset Filter",
+                        class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    },
                 }
             },
 

@@ -24,7 +24,7 @@ pub fn JobFunctions(cx: Scope) -> Element {
             0,
             "job_function_name".to_owned(),
             "ASC".to_owned(),
-            currentFilterStruct.read().CV.clone(),
+            currentFilterStruct.read().JobFunction.clone(),
         )
         .await
         .unwrap()
@@ -77,7 +77,7 @@ pub fn JobFunctions(cx: Scope) -> Element {
                 rsx! {
                     form {
                         onsubmit: move |event| {
-                            currentFilterStruct.write().CV = "job_function_name,".to_owned() + "" + &event.data.values["name"][0].clone();
+                            currentFilterStruct.write().JobFunction = "job_function_name,".to_owned() + "" + &event.data.values["name"][0].clone();
                         },
 
                         label {

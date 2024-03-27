@@ -77,7 +77,10 @@ pub fn JobFunctions(cx: Scope) -> Element {
                 rsx! {
                     form {
                         onsubmit: move |event| {
-                            currentFilterStruct.write().JobFunction = "job_function_name,".to_owned() + "" + &event.data.values["name"][0].clone();
+                            currentFilterStruct.write().JobFunction =
+                                "job_function_name,".to_owned() + "" +&event.data.values["name"][0].clone() + ",b.id,{" + "" + &event.data.values["Keywords"].clone().join("-") + "}";
+                            log::info!("81 id: {:?}", currentFilterStruct.read().JobFunction);
+                            log::info!("82 id: {event:?}");
                         },
 
                         label {
@@ -93,14 +96,33 @@ pub fn JobFunctions(cx: Scope) -> Element {
                             class: "mx-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
                             "Keywords",
                             select {
+                                name: "Keywords",
                                 class: "mx-5 text-gray-600 py-1 px-4 rounded",
+                                multiple: true,
+                                // size: 4,
                                 option {
-                                    value: "test",
+                                    value: "1",
                                     "test1"
                                 },
                                 option {
-                                    value: "test",
+                                    value: "2",
                                     "test2"
+                                },
+                                option {
+                                    value: "3",
+                                    "test3"
+                                },
+                                option {
+                                    value: "4",
+                                    "test4"
+                                },
+                                option {
+                                    value: "5",
+                                    "test5"
+                                },
+                                option {
+                                    value: "10",
+                                    "test10"
                                 },
 
                             },
